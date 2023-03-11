@@ -14,7 +14,6 @@ class PlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double iconSize = 85;
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: const CircleBorder(),
@@ -22,11 +21,17 @@ class PlayButton extends StatelessWidget {
           backgroundColor: ConfigColors.primaryColor,
         ),
         onPressed: () => toggleButton(),
-        child: noiseIsOn
-            ? Icon(Icons.stop_rounded, size: iconSize)
-            : Icon(
-                Icons.play_arrow_rounded,
-                size: iconSize,
-              ));
+        child: toggleIcon());
+  }
+
+  /// Change icon by [noiseIsOn]
+  Widget toggleIcon() {
+    double iconSize = 85;
+    return noiseIsOn
+        ? Icon(Icons.stop_rounded, size: iconSize)
+        : Icon(
+            Icons.play_arrow_rounded,
+            size: iconSize,
+          );
   }
 }

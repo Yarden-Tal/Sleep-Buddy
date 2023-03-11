@@ -5,6 +5,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/fonts.dart';
 import 'package:white_noise/config/sounds.dart';
+import 'package:white_noise/utils/utils.dart';
 // Widgets
 import 'package:white_noise/widgets/play_button.dart';
 
@@ -57,8 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future setAudio() async {
     /// Loop the audio track
     await player.setReleaseMode(ReleaseMode.loop);
-    const String url = Sound.rain;
-    await player.setSourceAsset(url);
+    await player.setSourceAsset(setUrlBySound(Sound.forest));
     isPlaying ? await player.pause() : await player.resume();
     isPlaying = !isPlaying;
   }
