@@ -6,8 +6,10 @@ import 'package:volume_controller/volume_controller.dart';
 import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/fonts.dart';
 import 'package:white_noise/config/sounds.dart';
+import 'package:white_noise/settings_bottom_sheet.dart';
 // Widgets
 import 'package:white_noise/widgets/play_button.dart';
+import 'package:white_noise/widgets/timer.dart';
 
 void main() {
   runApp(const MyApp());
@@ -67,6 +69,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() {
     VolumeController().removeListener();
     chosenSound.dispose();
+    _noiseIsOn = false;
+    isPlaying = false;
     super.dispose();
   }
 
@@ -88,8 +92,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void handleVolumeChange(double value) {
-    _volumeListenerValue = value;
     VolumeController().setVolume(_volumeListenerValue);
+    setState(() {
+      _volumeListenerValue = value;
+    });
   }
 
   @override
@@ -101,11 +107,18 @@ class _MyHomePageState extends State<MyHomePage> {
         fit: BoxFit.cover,
       )),
       child: Scaffold(
-        bottomSheet: null,
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
-          leading: const Icon(
-            Icons.settings,
-            size: 30,
+          leading: GestureDetector(
+            onTap: () => showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return const SettingsBottomSheet();
+                }),
+            child: const Icon(
+              Icons.music_note_outlined,
+              size: 30,
+            ),
           ),
           centerTitle: true,
           backgroundColor: ConfigColors.primaryColor,
@@ -113,12 +126,16 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              PlayButton(
-                noiseIsOn: _noiseIsOn,
-                toggleButton: _toggleBtn,
+              Padding(
+                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.16),
+                child: PlayButton(
+                  noiseIsOn: _noiseIsOn,
+                  toggleButton: _toggleBtn,
+                ),
               ),
+              const TimerWidget(),
             ],
           ),
         ),

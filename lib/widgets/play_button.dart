@@ -32,6 +32,13 @@ class PlayButton extends StatelessWidget {
         : Icon(
             Icons.play_arrow_rounded,
             size: iconSize,
+            shadows: const [
+              Shadow(
+                color: Colors.black87,
+                blurRadius: 20,
+                offset: Offset(4, 6),
+              ),
+            ],
           );
   }
 }
