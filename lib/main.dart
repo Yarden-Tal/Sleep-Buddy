@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 // Libraries
 import 'package:audioplayers/audioplayers.dart';
@@ -7,9 +9,9 @@ import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/fonts.dart';
 import 'package:white_noise/config/sounds.dart';
 import 'package:white_noise/settings_bottom_sheet.dart';
+import 'package:white_noise/widgets/info_bottom_sheet.dart';
 // Widgets
 import 'package:white_noise/widgets/play_button.dart';
-import 'package:white_noise/widgets/timer.dart';
 
 void main() {
   runApp(const MyApp());
@@ -71,6 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
     chosenSound.dispose();
     _noiseIsOn = false;
     isPlaying = false;
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -88,18 +91,58 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future toggleAudio() async {
     isPlaying ? await chosenSound.pause() : await chosenSound.resume();
+    !isPlaying ? _startTimer() : _stopTimer();
     isPlaying = !isPlaying;
   }
 
   void handleVolumeChange(double value) {
     VolumeController().setVolume(_volumeListenerValue);
-    setState(() {
-      _volumeListenerValue = value;
-    });
+    setState(() => _volumeListenerValue = value);
   }
+
+  int _seconds = 0;
+  Timer? _timer;
+  final Duration _stepDuration = const Duration(seconds: 5);
+
+  void _startTimer() {
+    if (_timer != null && _timer!.isActive) return;
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+        oneSec,
+        (Timer timer) => setState(() {
+              if (_seconds < 1) {
+                _noiseIsOn = false;
+                isPlaying = false;
+                timer.cancel();
+              } else {
+                _seconds = _seconds - 1;
+              }
+            }));
+  }
+
+  void _stopTimer() => _timer?.cancel();
+
+  void _addTime() => setState(() {
+        _seconds += _stepDuration.inSeconds;
+        if (isPlaying) _startTimer();
+      });
+
+  void _subtractTime() => setState(() {
+        if (_seconds >= _stepDuration.inSeconds) {
+          _seconds -= _stepDuration.inSeconds;
+        } else {
+          _seconds = 0;
+        }
+      });
 
   @override
   Widget build(BuildContext context) {
+    int hours = _seconds ~/ 3600;
+    int minutes = (_seconds % 3600) ~/ 60;
+    int seconds = _seconds % 60;
+    String computedTime =
+        '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+
     return Container(
       decoration: const BoxDecoration(
           image: DecorationImage(
@@ -109,6 +152,19 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.info),
+              tooltip: 'About the authors',
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const InfoBottomSheet();
+                    });
+              },
+            ),
+          ],
           leading: GestureDetector(
             onTap: () => showModalBottomSheet(
                 context: context,
@@ -135,7 +191,52 @@ class _MyHomePageState extends State<MyHomePage> {
                   toggleButton: _toggleBtn,
                 ),
               ),
-              const TimerWidget(),
+              Column(
+                children: <Widget>[
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  const Text(
+                    '',
+                    style: TextStyle(fontSize: 24, color: ConfigColors.textColor),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    computedTime,
+                    style: const TextStyle(
+                        fontSize: 48,
+                        color: ConfigColors.textColor,
+                        fontWeight: FontWeight.normal,
+                        shadows: [Shadow(color: Colors.black87, blurRadius: 40, offset: Offset(0, 2))]),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: _subtractTime,
+                        onLongPressEnd: (_) => _stopTimer(),
+                        child: Icon(
+                          Icons.remove_circle,
+                          color: _seconds == 0 ? ConfigColors.disabledBtn : ConfigColors.textColor,
+                          size: 55,
+                          shadows: const [Shadow(color: Colors.black87, blurRadius: 40, offset: Offset(0, 2))],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: _addTime,
+                        onLongPressEnd: (_) => _stopTimer(),
+                        child: const Icon(
+                          Icons.add_circle,
+                          color: ConfigColors.textColor,
+                          size: 55,
+                          shadows: [Shadow(color: Colors.black87, blurRadius: 40, offset: Offset(0, 2))],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ],
           ),
         ),
