@@ -17,7 +17,7 @@ class SoundRadioBtn extends StatelessWidget {
             formatSoundName(sound),
             style: TextStyle(
               color: ConfigColors.textColor,
-              fontSize: widthVar(context) * 0.075,
+              fontSize: width(context) * 0.075,
             ),
           ),
           onPressed: () {},

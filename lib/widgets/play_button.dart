@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:white_noise/config/colors.dart';
+import 'package:white_noise/config/responsivity_tools.dart';
+import 'package:white_noise/config/shadow.dart';
 
 /// PlayButton receives a [noiseIsOn] boolean, which toggles play and pause icons
 class PlayButton extends StatelessWidget {
@@ -21,24 +23,21 @@ class PlayButton extends StatelessWidget {
           backgroundColor: ConfigColors.primaryColor,
         ),
         onPressed: () => toggleButton(),
-        child: toggleIcon());
+        child: toggleIcon(context));
+  }
+
+  double returnIconSize(BuildContext context) {
+    return width(context) * 0.2;
   }
 
   /// Change icon by [noiseIsOn]
-  Widget toggleIcon() {
-    double iconSize = 85;
+  Widget toggleIcon(BuildContext context) {
     return noiseIsOn
-        ? Icon(Icons.stop_rounded, size: iconSize)
+        ? Icon(Icons.stop_rounded, size: returnIconSize(context))
         : Icon(
             Icons.play_arrow_rounded,
-            size: iconSize,
-            shadows: const [
-              Shadow(
-                color: Colors.black87,
-                blurRadius: 20,
-                offset: Offset(4, 6),
-              ),
-            ],
+            size: returnIconSize(context),
+            shadows: applyShadow(),
           );
   }
 }

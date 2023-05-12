@@ -8,6 +8,7 @@ import 'package:volume_controller/volume_controller.dart';
 import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/fonts.dart';
 import 'package:white_noise/config/responsivity_tools.dart';
+import 'package:white_noise/config/shadow.dart';
 import 'package:white_noise/config/sounds.dart';
 import 'package:white_noise/settings_bottom_sheet.dart';
 import 'package:white_noise/widgets/info_bottom_sheet.dart';
@@ -51,6 +52,9 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _iconShowsPlay = false;
   bool audioIsPlaying = false;
   final chosenSound = AudioPlayer(playerId: "sound");
+  int _seconds = 0;
+  Timer? _timer;
+  final Duration _stepDuration = const Duration(seconds: 5);
 
   @override
   void initState() {
@@ -94,10 +98,6 @@ class _MyHomePageState extends State<MyHomePage> {
     VolumeController().setVolume(_volume);
     setState(() => _volume = value);
   }
-
-  int _seconds = 0;
-  Timer? _timer;
-  final Duration _stepDuration = const Duration(seconds: 5);
 
   void _startTimer() {
     if (_timer != null && _timer!.isActive) return;
@@ -220,17 +220,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           Icons.remove_circle,
                           color: _seconds == 0 ? ConfigColors.disabledBtn : ConfigColors.textColor,
                           size: 55,
-                          shadows: const [Shadow(color: Colors.black87, blurRadius: 40, offset: Offset(0, 2))],
+                          shadows: applyShadow(),
                         ),
                       ),
                       GestureDetector(
                         onTap: _addTime,
                         onLongPressEnd: (_) => _stopTimer(),
-                        child: const Icon(
+                        child: Icon(
                           Icons.add_circle,
                           color: ConfigColors.textColor,
                           size: 55,
-                          shadows: [Shadow(color: Colors.black87, blurRadius: 40, offset: Offset(0, 2))],
+                          shadows: applyShadow(),
                         ),
                       ),
                     ],
