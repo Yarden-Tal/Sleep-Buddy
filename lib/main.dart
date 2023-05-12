@@ -7,6 +7,7 @@ import 'package:volume_controller/volume_controller.dart';
 // Config
 import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/fonts.dart';
+import 'package:white_noise/config/responsivity_tools.dart';
 import 'package:white_noise/config/sounds.dart';
 import 'package:white_noise/settings_bottom_sheet.dart';
 import 'package:white_noise/widgets/info_bottom_sheet.dart';
@@ -46,16 +47,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  /// Volume state
-  double _volumeListenerValue = 0;
-
-  /// Button toggle start/stop icons
-  bool _noiseIsOn = false;
-
-  /// Audio toggle start/stop
-  bool isPlaying = false;
-
-  /// Audio [Sound] chosen
+  double _volume = 0;
+  bool _iconShowsPlay = false;
+  bool audioIsPlaying = false;
   final chosenSound = AudioPlayer(playerId: "sound");
 
   @override
@@ -63,41 +57,42 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     /// Listen to system volume change
-    VolumeController().listener((volume) => setState(() => _volumeListenerValue = volume));
-    VolumeController().getVolume().then((volume) => _volumeListenerValue = volume);
+    VolumeController().listener((volume) => setState(() => _volume = volume));
+    VolumeController().getVolume().then((volume) => _volume = volume);
   }
 
   @override
   void dispose() {
     VolumeController().removeListener();
     chosenSound.dispose();
-    _noiseIsOn = false;
-    isPlaying = false;
+    _iconShowsPlay = false;
+    audioIsPlaying = false;
     _timer?.cancel();
     super.dispose();
   }
 
+  /* FUNCTIONS */
+
   void _toggleBtn() {
     setSound();
-    setState(() => _noiseIsOn = !_noiseIsOn);
+    setState(() => _iconShowsPlay = !_iconShowsPlay);
   }
 
   Future setSound() async {
-    /// Loop the audio track
     await chosenSound.setReleaseMode(ReleaseMode.loop);
     await chosenSound.setSourceAsset(Sound.forest);
     toggleAudio();
   }
 
   Future toggleAudio() async {
-    isPlaying ? await chosenSound.pause() : await chosenSound.resume();
-    !isPlaying ? _startTimer() : _stopTimer();
-    isPlaying = !isPlaying;
+    audioIsPlaying ? await chosenSound.pause() : await chosenSound.resume();
+    !audioIsPlaying ? _startTimer() : _stopTimer();
+    audioIsPlaying = !audioIsPlaying;
   }
 
   void handleVolumeChange(double value) {
-    VolumeController().setVolume(_volumeListenerValue);
-    setState(() => _volumeListenerValue = value);
+    VolumeController().setVolume(_volume);
+    setState(() => _volume = value);
   }
 
   int _seconds = 0;
@@ -111,8 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
         oneSec,
         (Timer timer) => setState(() {
               if (_seconds < 1) {
-                _noiseIsOn = false;
-                isPlaying = false;
+                _iconShowsPlay = false;
+                audioIsPlaying = false;
                 timer.cancel();
               } else {
                 _seconds = _seconds - 1;
@@ -124,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addTime() => setState(() {
         _seconds += _stepDuration.inSeconds;
-        if (isPlaying) _startTimer();
+        if (audioIsPlaying) _startTimer();
       });
 
   void _subtractTime() => setState(() {
@@ -135,14 +130,19 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       });
 
+  String formatTimePart(int timePart) => timePart.toString().padLeft(2, '0');
+
+  String computeTime() {
+    String hours = formatTimePart(_seconds ~/ 3600);
+    String minutes = formatTimePart((_seconds % 3600) ~/ 60);
+    String seconds = formatTimePart(_seconds % 60);
+    return '$hours:$minutes:$seconds';
+  }
+
+  /* BUILD */
+
   @override
   Widget build(BuildContext context) {
-    int hours = _seconds ~/ 3600;
-    int minutes = (_seconds % 3600) ~/ 60;
-    int seconds = _seconds % 60;
-    String computedTime =
-        '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-
     return Container(
       decoration: const BoxDecoration(
           image: DecorationImage(
@@ -185,9 +185,9 @@ class _MyHomePageState extends State<MyHomePage> {
             // mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.16),
+                padding: EdgeInsets.only(top: height(context) * 0.16),
                 child: PlayButton(
-                  noiseIsOn: _noiseIsOn,
+                  noiseIsOn: _iconShowsPlay,
                   toggleButton: _toggleBtn,
                 ),
               ),
@@ -202,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    computedTime,
+                    computeTime(),
                     style: const TextStyle(
                         fontSize: 48,
                         color: ConfigColors.textColor,
@@ -247,7 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
               activeColor: ConfigColors.primaryColor,
               min: 0,
               max: 1,
-              value: _volumeListenerValue,
+              value: _volume,
               onChanged: (double value) => handleVolumeChange(value)),
         ],
         backgroundColor: ConfigColors.backgroundColor,

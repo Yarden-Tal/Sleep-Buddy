@@ -14,6 +14,9 @@ class _InfoBottomSheet extends State<InfoBottomSheet> {
     return Container(
         decoration: const BoxDecoration(color: ConfigColors.primaryColor),
         height: MediaQuery.of(context).size.height * 0.35,
-        child: Text("About Yarden"));
+        child: const Text(
+          "About Yarden",
+          style: TextStyle(color: ConfigColors.textColor),
+        ));
   }
 }
