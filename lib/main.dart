@@ -49,8 +49,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   double _volume = 0;
-  bool _iconShowsPlay = false;
+  bool _iconShowsStop = false;
   bool audioIsPlaying = false;
+  bool decreaseBtnIsDisabled = true;
   final chosenSound = AudioPlayer(playerId: "sound");
   int _seconds = 0;
   Timer? _timer;
@@ -69,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() {
     VolumeController().removeListener();
     chosenSound.dispose();
-    _iconShowsPlay = false;
+    _iconShowsStop = false;
     audioIsPlaying = false;
     _timer?.cancel();
     super.dispose();
@@ -77,20 +78,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /* FUNCTIONS */
 
-  void _toggleBtn() {
-    setSound();
-    setState(() => _iconShowsPlay = !_iconShowsPlay);
+  void _toggleBtn() async {
+    await setSound();
+    await toggleAudio();
+    setState(() => _iconShowsStop = !_iconShowsStop);
   }
 
   Future setSound() async {
     await chosenSound.setReleaseMode(ReleaseMode.loop);
     await chosenSound.setSourceAsset(Sound.forest);
-    toggleAudio();
+    // toggleAudio();
   }
 
   Future toggleAudio() async {
-    audioIsPlaying ? await chosenSound.pause() : await chosenSound.resume();
-    !audioIsPlaying ? _startTimer() : _stopTimer();
+    if (audioIsPlaying) {
+      await chosenSound.pause();
+      _stopTimer();
+    } else if (!audioIsPlaying) {
+      await chosenSound.resume();
+      _startTimer();
+    }
     audioIsPlaying = !audioIsPlaying;
   }
 
@@ -100,14 +107,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _startTimer() {
-    if (_timer != null && _timer!.isActive) return;
+    if ((_timer != null && _timer!.isActive) || _seconds < 1) return;
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
         oneSec,
         (Timer timer) => setState(() {
               if (_seconds < 1) {
-                _iconShowsPlay = false;
-                audioIsPlaying = false;
+                _iconShowsStop = false;
+                toggleAudio();
+                decreaseBtnIsDisabled = true;
                 timer.cancel();
               } else {
                 _seconds = _seconds - 1;
@@ -119,6 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addTime() => setState(() {
         _seconds += _stepDuration.inSeconds;
+        decreaseBtnIsDisabled = false;
         if (audioIsPlaying) _startTimer();
       });
 
@@ -185,12 +194,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Center(
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.only(top: height(context) * 0.16),
                 child: PlayButton(
-                  noiseIsOn: _iconShowsPlay,
+                  noiseIsOn: _iconShowsStop,
                   toggleButton: _toggleBtn,
                 ),
               ),
@@ -222,7 +230,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onLongPressEnd: (_) => _stopTimer(),
                         child: Icon(
                           Icons.remove_circle,
-                          color: _seconds == 0 ? ConfigColors.disabledBtn : ConfigColors.textColor,
+                          color: decreaseBtnIsDisabled ? ConfigColors.disabledBtn : ConfigColors.textColor,
                           size: width(context) * 0.15,
                           shadows: applyShadow(),
                         ),
