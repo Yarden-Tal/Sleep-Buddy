@@ -22,9 +22,7 @@ class SoundRadioBtn extends StatelessWidget {
           ),
           onPressed: () {},
         ),
-        const SizedBox(
-          height: 25,
-        )
+        const SizedBox(height: 25)
       ],
     );
   }

@@ -152,28 +152,31 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
+          titleTextStyle: TextStyle(fontSize: width(context) * 0.055),
+          toolbarHeight: height(context) * 0.08,
           actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.info),
-              tooltip: 'About the authors',
-              onPressed: () {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const InfoBottomSheet();
-                    });
-              },
+            Padding(
+              padding: EdgeInsets.only(right: width(context) * 0.03),
+              child: IconButton(
+                  icon: Icon(
+                    Icons.info,
+                    size: height(context) * 0.04,
+                  ),
+                  tooltip: 'About the authors',
+                  onPressed: () => showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) => const InfoBottomSheet(),
+                      )),
             ),
           ],
           leading: GestureDetector(
             onTap: () => showModalBottomSheet(
-                context: context,
-                builder: (BuildContext context) {
-                  return const SettingsBottomSheet();
-                }),
-            child: const Icon(
+              context: context,
+              builder: (BuildContext context) => const SettingsBottomSheet(),
+            ),
+            child: Icon(
               Icons.music_note_outlined,
-              size: 30,
+              size: height(context) * 0.04,
             ),
           ),
           centerTitle: true,
@@ -200,16 +203,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     '',
                     style: TextStyle(fontSize: 24, color: ConfigColors.textColor),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: height(context) * 0.1),
                   Text(
                     computeTime(),
-                    style: const TextStyle(
-                        fontSize: 48,
-                        color: ConfigColors.textColor,
-                        fontWeight: FontWeight.normal,
-                        shadows: [Shadow(color: Colors.black87, blurRadius: 40, offset: Offset(0, 2))]),
+                    style: TextStyle(
+                      fontSize: width(context) * 0.09,
+                      color: ConfigColors.textColor,
+                      fontWeight: FontWeight.normal,
+                      shadows: applyShadow(),
+                    ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: height(context) * 0.025),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -219,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Icon(
                           Icons.remove_circle,
                           color: _seconds == 0 ? ConfigColors.disabledBtn : ConfigColors.textColor,
-                          size: 55,
+                          size: width(context) * 0.15,
                           shadows: applyShadow(),
                         ),
                       ),
@@ -229,7 +233,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Icon(
                           Icons.add_circle,
                           color: ConfigColors.textColor,
-                          size: 55,
+                          size: width(context) * 0.15,
                           shadows: applyShadow(),
                         ),
                       ),
@@ -241,14 +245,22 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         persistentFooterButtons: [
-          Slider(
-              thumbColor: ConfigColors.textColor.withOpacity(0.8),
-              inactiveColor: ConfigColors.backgroundColor,
-              activeColor: ConfigColors.primaryColor,
-              min: 0,
-              max: 1,
-              value: _volume,
-              onChanged: (double value) => handleVolumeChange(value)),
+          Padding(
+            padding: isLargeScreen(context) ? EdgeInsets.symmetric(horizontal: width(context) * 0.15) : EdgeInsets.zero,
+            child: SliderTheme(
+              data: SliderThemeData(
+                trackHeight: height(context) * 0.01,
+              ),
+              child: Slider(
+                  thumbColor: ConfigColors.textColor.withOpacity(0.8),
+                  inactiveColor: ConfigColors.backgroundColor,
+                  activeColor: ConfigColors.primaryColor,
+                  min: 0,
+                  max: 1,
+                  value: _volume,
+                  onChanged: (double value) => handleVolumeChange(value)),
+            ),
+          ),
         ],
         backgroundColor: ConfigColors.backgroundColor,
       ),
