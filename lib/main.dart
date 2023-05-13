@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final chosenSound = AudioPlayer(playerId: "sound");
   int _seconds = 0;
   Timer? _timer;
-  final Duration _stepDuration = const Duration(seconds: 5);
+  final Duration _stepDuration = const Duration(minutes: 30);
 
   @override
   void initState() {
