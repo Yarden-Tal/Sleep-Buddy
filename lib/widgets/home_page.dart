@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:volume_controller/volume_controller.dart';
@@ -7,8 +6,9 @@ import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/responsivity_tools.dart';
 import 'package:white_noise/config/shadow.dart';
 import 'package:white_noise/config/sounds.dart';
-import 'package:white_noise/settings_bottom_sheet.dart';
-import 'package:white_noise/widgets/info_bottom_sheet.dart';
+import 'package:white_noise/widgets/sheets/settings_bottom_sheet.dart';
+import 'package:white_noise/utils/time_utils.dart';
+import 'package:white_noise/widgets/sheets/info_bottom_sheet.dart';
 import 'package:white_noise/widgets/play_button.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -68,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
       await chosenSound.pause();
       _stopTimer();
     } else if (!audioIsPlaying) {
+      await chosenSound.setReleaseMode(ReleaseMode.loop);
       await chosenSound.resume();
       _startTimer();
     }
@@ -111,15 +112,6 @@ class _MyHomePageState extends State<MyHomePage> {
           _seconds = 0;
         }
       });
-
-  String formatTimePart(int timePart) => timePart.toString().padLeft(2, '0');
-
-  String computeTime() {
-    String hours = formatTimePart(_seconds ~/ 3600);
-    String minutes = formatTimePart((_seconds % 3600) ~/ 60);
-    String seconds = formatTimePart(_seconds % 60);
-    return '$hours:$minutes:$seconds';
-  }
 
   /* BUILD */
 
@@ -186,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   SizedBox(height: height(context) * 0.1),
                   Text(
-                    computeTime(),
+                    computeTime(_seconds),
                     style: TextStyle(
                       fontSize: width(context) * 0.09,
                       color: ConfigColors.textColor,

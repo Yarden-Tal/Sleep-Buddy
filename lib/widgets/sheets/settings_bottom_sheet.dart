@@ -16,8 +16,8 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
     return Container(
         decoration: const BoxDecoration(color: ConfigColors.primaryColor),
         height: MediaQuery.of(context).size.height * 0.35,
-        child: Column(
-          children: const [
+        child: const Column(
+          children: [
             SoundRadioBtn(
               sound: Sound.generic,
             ),

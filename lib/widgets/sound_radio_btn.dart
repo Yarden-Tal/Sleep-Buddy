@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/responsivity_tools.dart';
-import 'package:white_noise/utils/utils.dart';
+import 'package:white_noise/utils/sound_utils.dart';
 
 class SoundRadioBtn extends StatelessWidget {
   const SoundRadioBtn({super.key, required this.sound});
