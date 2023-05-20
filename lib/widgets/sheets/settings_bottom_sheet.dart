@@ -1,36 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/sounds.dart';
-import 'package:white_noise/widgets/sound_radio_btn.dart';
+import 'package:white_noise/utils/sound_utils.dart';
 
 class SettingsBottomSheet extends StatefulWidget {
-  const SettingsBottomSheet({super.key});
+  final dynamic changeSound;
+  final int selectedSoundIndex;
+
+  const SettingsBottomSheet({
+    super.key,
+    required this.changeSound,
+    required this.selectedSoundIndex,
+  });
 
   @override
-  State<SettingsBottomSheet> createState() => _SettingsBottomSheetState();
+  SettingsBottomSheetState createState() => SettingsBottomSheetState();
 }
 
-class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
+class SettingsBottomSheetState extends State<SettingsBottomSheet> {
+  late int selectedSound;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedSound = widget.selectedSoundIndex;
+  }
+
+  setSelectedRadio(int val) async => setState(() {
+        selectedSound = val;
+        widget.changeSound(val);
+        Navigator.pop(context);
+      });
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: const BoxDecoration(color: ConfigColors.primaryColor),
-        height: MediaQuery.of(context).size.height * 0.35,
-        child: const Column(
-          children: [
-            SoundRadioBtn(
-              sound: Sound.generic,
-            ),
-            SoundRadioBtn(
-              sound: Sound.forest,
-            ),
-            SoundRadioBtn(
-              sound: Sound.rain,
-            ),
-            SoundRadioBtn(
-              sound: Sound.waves,
-            ),
-          ],
-        ));
+    List<RadioListTile> radioButtons = [];
+    for (int i = 0; i < sounds.length; i++) {
+      radioButtons.add(_radioButton(i + 1, sounds[i]));
+    }
+    return ListView(children: radioButtons);
+  }
+
+  RadioListTile _radioButton(int index, String soundName) {
+    return RadioListTile(
+      value: index,
+      groupValue: selectedSound,
+      onChanged: (val) {
+        setSelectedRadio(val!);
+      },
+      title: Text(formatSoundName(soundName)),
+    );
   }
 }
