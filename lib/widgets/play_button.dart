@@ -80,7 +80,6 @@ class _PlayButtonState extends State<PlayButton> with SingleTickerProviderStateM
         : Icon(
             Icons.play_arrow_rounded,
             size: returnIconSize(context),
-            // shadows: applyShadow(),
           );
   }
 }

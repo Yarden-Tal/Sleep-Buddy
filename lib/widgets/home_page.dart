@@ -25,10 +25,12 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _iconShowsStop = false;
   bool audioIsPlaying = false;
   final audioPlayer = AudioPlayer(playerId: "sound");
-  int _seconds = 0;
-  Timer? _timer;
   final Duration _stepDuration = const Duration(minutes: 30);
   int selectedSoundIndex = 1;
+  int _seconds = 0;
+  Timer? _timer;
+  bool colorAddButton = false;
+  bool colorSubtractButton = false;
 
   @override
   void initState() {
@@ -42,6 +44,8 @@ class _MyHomePageState extends State<MyHomePage> {
     audioPlayer.dispose();
     _iconShowsStop = false;
     audioIsPlaying = false;
+    colorAddButton = false;
+    colorSubtractButton = false;
     _timer?.cancel();
     super.dispose();
   }
@@ -92,13 +96,29 @@ class _MyHomePageState extends State<MyHomePage> {
   void _stopTimer() => _timer?.cancel();
 
   void _addTime() => setState(() {
+        Timer(const Duration(milliseconds: 100), () {
+          setState(() {
+            colorAddButton = false;
+          });
+        });
         _seconds += _stepDuration.inSeconds;
         if (audioIsPlaying) _startTimer();
+        setState(() {
+          colorAddButton = true;
+        });
       });
 
   void _subtractTime() => setState(() {
         if (_seconds >= _stepDuration.inSeconds) {
+          Timer(const Duration(milliseconds: 100), () {
+            setState(() {
+              colorSubtractButton = false;
+            });
+          });
           _seconds -= _stepDuration.inSeconds;
+          setState(() {
+            colorSubtractButton = true;
+          });
         } else {
           _seconds = 0;
         }
@@ -127,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     changeSound: _changeSound,
                     selectedSoundIndex: selectedSoundIndex,
                   ),
-                  icon: Icons.music_note_outlined,
+                  icon: Icons.settings,
                 ))
           ],
           leading: Padding(
@@ -158,8 +178,11 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               const CustomSizedBox(boxHeight: 0.2),
               Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  color: ConfigColors.timerBackground,
+                ),
                 padding: EdgeInsets.symmetric(vertical: height(context) * 0.02),
-                color: ConfigColors.timerBackground,
                 child: Column(
                   children: <Widget>[
                     Icon(
@@ -192,7 +215,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           // onLongPressStart: (_) => _stopTimer(),
                           child: Icon(
                             Icons.remove_circle,
-                            color: _seconds < 1 ? ConfigColors.disabledBtn : ConfigColors.textColor,
+                            color: _seconds < 1
+                                ? ConfigColors.disabledBtn
+                                : (colorSubtractButton == true ? ConfigColors.activeTimerColor : ConfigColors.textColor),
                             size: width(context) * 0.15,
                             shadows: applyShadow(),
                           ),
@@ -201,7 +226,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           onTap: _addTime,
                           child: Icon(
                             Icons.add_circle,
-                            color: ConfigColors.textColor,
+                            color: colorAddButton == true ? ConfigColors.activeTimerColor : ConfigColors.textColor,
                             size: width(context) * 0.15,
                             shadows: applyShadow(),
                           ),
