@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/responsivity_tools.dart';
-import 'package:white_noise/config/shadow.dart';
 
-/// PlayButton receives a [noiseIsOn] boolean, which toggles play and pause icons
 class PlayButton extends StatefulWidget {
   const PlayButton({
     required this.noiseIsOn,
