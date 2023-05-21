@@ -37,39 +37,71 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: const BoxDecoration(color: Color.fromARGB(229, 15, 22, 98)),
+        decoration: const BoxDecoration(color: Color.fromARGB(247, 15, 22, 98)),
         padding: EdgeInsets.all(width(context) * 0.04),
-        height: MediaQuery.of(context).size.height * 0.4,
+        height: MediaQuery.of(context).size.height * 0.477,
         child: ListView(
-          children: _radioButtons(),
+          children: [
+            const Divider(
+              color: ConfigColors.disabledBtn,
+              endIndent: 150,
+              indent: 150,
+              thickness: 2,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: height(context) * 0.03),
+              child: Center(
+                  child: Text(
+                "Pick a sound",
+                style: TextStyle(
+                  color: ConfigColors.activeTimerColor,
+                  fontSize: width(context) * 0.08,
+                ),
+              )),
+            ),
+            ..._radioButtons()
+          ],
         ));
   }
 
-  Wrap _radioButton(int index, String soundName, IconData icon) {
+  Widget _radioButton(int index, String soundName, IconData icon) {
     return Wrap(children: [
-      RadioListTile(
-          value: index,
-          groupValue: selectedSound,
-          onChanged: (val) {
-            setSelectedRadio(val!);
-          },
-          title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(formatSoundName(soundName), style: TextStyle(color: ConfigColors.textColor, fontSize: width(context) * 0.06)),
-            // SizedBox(width: width(context) * 0.06), // Add some spacing between the icon and text
-            Icon(
-              icon,
-              color: ConfigColors.activeTimerColor,
-              size: width(context) * 0.06,
-            )
-          ]),
-          activeColor: ConfigColors.activeTimerColor)
+      Container(
+        decoration:
+            const BoxDecoration(color: Color.fromARGB(208, 15, 22, 98), borderRadius: BorderRadius.all(Radius.circular(15))),
+        child: RadioListTile(
+            value: index,
+            groupValue: selectedSound,
+            onChanged: (val) {
+              setSelectedRadio(val!);
+            },
+            title: Row(
+              children: [
+                Icon(
+                  icon,
+                  color: ConfigColors.activeTimerColor,
+                  size: width(context) * 0.07,
+                ),
+                SizedBox(width: width(context) * 0.08),
+                Text(formatSoundName(soundName),
+                    style: TextStyle(color: ConfigColors.textColor, fontSize: width(context) * 0.06)),
+              ],
+            ),
+            activeColor: ConfigColors.activeTimerColor),
+      ),
+      const Divider(
+        color: ConfigColors.timerBackground,
+        thickness: 1,
+      ),
     ]);
   }
 
-  List<Wrap> _radioButtons() {
-    List<Wrap> radioButtons = [];
+  List<Theme> _radioButtons() {
+    List<Theme> radioButtons = [];
     for (int i = 0; i < sounds.length; i++) {
-      radioButtons.add(_radioButton(i + 1, sounds[i], icons[i]));
+      radioButtons.add(Theme(
+          data: Theme.of(context).copyWith(unselectedWidgetColor: ConfigColors.backgroundColor),
+          child: _radioButton(i + 1, sounds[i], icons[i])));
     }
     return radioButtons;
   }
