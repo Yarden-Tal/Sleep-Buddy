@@ -39,7 +39,6 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
     return Container(
         decoration: const BoxDecoration(color: Color.fromARGB(247, 15, 22, 98)),
         padding: EdgeInsets.all(width(context) * 0.04),
-        height: MediaQuery.of(context).size.height * 0.477,
         child: ListView(
           children: [
             const Divider(
@@ -90,7 +89,7 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
             activeColor: ConfigColors.activeTimerColor),
       ),
       const Divider(
-        color: ConfigColors.timerBackground,
+        color: Colors.transparent,
         thickness: 1,
       ),
     ]);
