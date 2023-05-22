@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   audioplayers: ^3.0.1
   volume_controller: ^2.0.6
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
