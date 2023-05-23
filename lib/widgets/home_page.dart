@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:white_noise/config/colors.dart';
+import 'package:white_noise/config/fonts.dart';
 import 'package:white_noise/config/responsivity_tools.dart';
 import 'package:white_noise/config/shadow.dart';
 import 'package:white_noise/config/sounds.dart';
@@ -137,7 +138,10 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
-          titleTextStyle: TextStyle(fontSize: width(context) * 0.055),
+          titleTextStyle: TextStyle(
+            fontSize: width(context) * 0.065,
+            fontFamily: ConfigFonts.primaryFont,
+          ),
           toolbarHeight: height(context) * 0.08,
           actions: <Widget>[
             Padding(
