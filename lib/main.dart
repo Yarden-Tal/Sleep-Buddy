@@ -13,15 +13,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Sleep Buddy',
-      theme: ThemeData(
-        primaryColor: ConfigColors.primaryColor,
-        fontFamily: ConfigFonts.primaryFont,
-        fontFamilyFallback: ConfigFonts.fallBackFonts,
-      ),
-      home: const MyHomePage(
         title: 'Sleep Buddy',
-      ),
-    );
+        theme: ThemeData(
+            primaryColor: ConfigColors.primaryColor,
+            fontFamily: ConfigFonts.primaryFont,
+            fontFamilyFallback: ConfigFonts.fallBackFonts),
+        home: const MyHomePage(title: 'Sleep Buddy'));
   }
 }
