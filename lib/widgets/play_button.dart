@@ -6,11 +6,13 @@ class PlayButton extends StatefulWidget {
   const PlayButton({
     required this.noiseIsOn,
     required this.toggleButton,
+    required this.isDarkMode,
     super.key,
   });
 
   final bool noiseIsOn;
   final Function toggleButton;
+  final bool isDarkMode;
 
   @override
   State<PlayButton> createState() => _PlayButtonState();
@@ -18,7 +20,6 @@ class PlayButton extends StatefulWidget {
 
 class _PlayButtonState extends State<PlayButton> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<Color?> _bgColorAnimation;
   late Animation<Color?> _fgColorAnimation;
 
   @override
@@ -30,14 +31,9 @@ class _PlayButtonState extends State<PlayButton> with SingleTickerProviderStateM
       duration: const Duration(milliseconds: 300),
     );
 
-    _bgColorAnimation = ColorTween(
-      begin: ConfigColors.primaryColor,
-      end: const Color.fromARGB(255, 49, 56, 135),
-    ).animate(_controller);
-
     _fgColorAnimation = ColorTween(
       begin: ConfigColors.textColor,
-      end: ConfigColors.primaryColor,
+      end: widget.isDarkMode ? ConfigColors.primaryColor : LightModeColors.primaryColorLight,
     ).animate(_controller);
   }
 
@@ -58,7 +54,7 @@ class _PlayButtonState extends State<PlayButton> with SingleTickerProviderStateM
                 style: ElevatedButton.styleFrom(
                     shape: const CircleBorder(),
                     padding: const EdgeInsets.all(24),
-                    backgroundColor: (_bgColorAnimation.value),
+                    backgroundColor: widget.isDarkMode ? ConfigColors.primaryColor : LightModeColors.primaryColorLight,
                     foregroundColor: (_fgColorAnimation.value)),
                 onPressed: () => {
                       _controller.forward().then((value) => _controller.reverse()),

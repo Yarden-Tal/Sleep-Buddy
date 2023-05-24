@@ -10,7 +10,6 @@ import 'package:white_noise/widgets/customs/custom_button.dart';
 import 'package:white_noise/widgets/customs/custom_sized_box.dart';
 import 'package:white_noise/widgets/sheets/settings_bottom_sheet.dart';
 import 'package:white_noise/utils/time_utils.dart';
-import 'package:white_noise/widgets/sheets/info_bottom_sheet.dart';
 import 'package:white_noise/widgets/play_button.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -32,6 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Timer? _timer;
   bool colorAddButton = false;
   bool colorSubtractButton = false;
+  bool isDarkMode = true;
 
   @override
   void initState() {
@@ -130,16 +130,16 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
           image: DecorationImage(
-        image: AssetImage("assets/images/background.png"),
+        image: AssetImage(isDarkMode ? "assets/images/background.png" : "assets/images/background-light.png"),
         fit: BoxFit.cover,
       )),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           titleTextStyle: TextStyle(
-            fontSize: width(context) * 0.065,
+            fontSize: width(context) * 0.085,
             fontFamily: ConfigFonts.primaryFont,
           ),
           toolbarHeight: height(context) * 0.08,
@@ -156,13 +156,17 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
           leading: Padding(
             padding: EdgeInsets.only(left: width(context) * 0.03),
-            child: const CustomButton(
-              bottomSheet: InfoBottomSheet(),
-              icon: Icons.info,
+            child: IconButton(
+              onPressed: () => setState(() => isDarkMode = !isDarkMode),
+              icon: Icon(
+                isDarkMode ? Icons.sunny : Icons.nightlight,
+                color: isDarkMode ? ConfigColors.activeTimerColor : ConfigColors.textColor,
+                size: height(context) * 0.04,
+              ),
             ),
           ),
           centerTitle: true,
-          backgroundColor: ConfigColors.primaryColor,
+          backgroundColor: isDarkMode ? ConfigColors.primaryColor : LightModeColors.primaryColorLight,
           title: Text(widget.title),
         ),
         /* BODY */
@@ -172,20 +176,22 @@ class _MyHomePageState extends State<MyHomePage> {
               PlayButton(
                 noiseIsOn: _iconShowsStop,
                 toggleButton: _toggleBtn,
+                isDarkMode: isDarkMode,
               ),
             ],
           ),
         ),
-        backgroundColor: ConfigColors.backgroundColor,
+        backgroundColor: ConfigColors.backgroundColor.withOpacity(0),
         persistentFooterButtons: [
           Column(
             children: [
               const CustomSizedBox(boxHeight: 0.2),
               Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                  color: ConfigColors.timerBackground,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                  color: isDarkMode ? ConfigColors.timerBackground : LightModeColors.timerBackgroundLight,
                 ),
+                width: width(context) * 0.9,
                 padding: EdgeInsets.symmetric(vertical: height(context) * 0.02),
                 child: Column(
                   children: <Widget>[
