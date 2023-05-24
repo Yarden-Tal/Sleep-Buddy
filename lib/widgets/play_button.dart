@@ -65,17 +65,10 @@ class _PlayButtonState extends State<PlayButton> with SingleTickerProviderStateM
         ));
   }
 
-  double returnIconSize(BuildContext context) {
-    return width(context) * 0.25;
-  }
+  double returnIconSize(BuildContext context) => width(context) * 0.25;
 
   /// Change icon by [widget.noiseIsOn]
-  Widget toggleIcon(BuildContext context) {
-    return widget.noiseIsOn
-        ? Icon(Icons.stop_rounded, size: returnIconSize(context))
-        : Icon(
-            Icons.play_arrow_rounded,
-            size: returnIconSize(context),
-          );
-  }
+  Widget toggleIcon(BuildContext context) => widget.noiseIsOn
+      ? Icon(Icons.stop_rounded, size: returnIconSize(context))
+      : Icon(Icons.play_arrow_rounded, size: returnIconSize(context));
 }

@@ -8,11 +8,13 @@ import 'package:white_noise/utils/sound_utils.dart';
 class SettingsBottomSheet extends StatefulWidget {
   final dynamic changeSound;
   final int selectedSoundIndex;
+  final bool isDarkMode;
 
   const SettingsBottomSheet({
     super.key,
     required this.changeSound,
     required this.selectedSoundIndex,
+    required this.isDarkMode,
   });
 
   @override
@@ -37,7 +39,9 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: const BoxDecoration(color: Color.fromARGB(247, 15, 22, 98)),
+        decoration: BoxDecoration(
+          color: widget.isDarkMode ? const Color.fromARGB(247, 15, 22, 98) : LightModeColors.primaryColorLight,
+        ),
         padding: EdgeInsets.all(width(context) * 0.04),
         child: ListView(
           children: [
@@ -66,8 +70,9 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
   Widget _radioButton(int index, String soundName, IconData icon) {
     return Wrap(children: [
       Container(
-        decoration:
-            const BoxDecoration(color: Color.fromARGB(208, 15, 22, 98), borderRadius: BorderRadius.all(Radius.circular(15))),
+        decoration: BoxDecoration(
+            color: widget.isDarkMode ? const Color.fromARGB(208, 15, 22, 98) : ConfigColors.disabledBtn,
+            borderRadius: BorderRadius.all(Radius.circular(15))),
         child: RadioListTile(
             value: index,
             groupValue: selectedSound,

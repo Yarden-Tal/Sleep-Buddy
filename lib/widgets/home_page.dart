@@ -98,28 +98,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addTime() => setState(() {
         Timer(const Duration(milliseconds: 100), () {
-          setState(() {
-            colorAddButton = false;
-          });
+          setState(() => colorAddButton = false);
         });
         _seconds += _stepDuration.inSeconds;
         if (audioIsPlaying) _startTimer();
-        setState(() {
-          colorAddButton = true;
-        });
+        setState(() => colorAddButton = true);
       });
 
   void _subtractTime() => setState(() {
         if (_seconds >= _stepDuration.inSeconds) {
           Timer(const Duration(milliseconds: 100), () {
-            setState(() {
-              colorSubtractButton = false;
-            });
+            setState(() => colorSubtractButton = false);
           });
           _seconds -= _stepDuration.inSeconds;
-          setState(() {
-            colorSubtractButton = true;
-          });
+          setState(() => colorSubtractButton = true);
         } else {
           _seconds = 0;
         }
@@ -150,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   bottomSheet: SettingsBottomSheet(
                     changeSound: _changeSound,
                     selectedSoundIndex: selectedSoundIndex,
+                    isDarkMode: isDarkMode,
                   ),
                   icon: Icons.settings,
                 ))
@@ -222,7 +215,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         GestureDetector(
                           onTap: _subtractTime,
-                          // onLongPressStart: (_) => _stopTimer(),
                           child: Icon(
                             Icons.remove_circle,
                             color: _seconds < 1
