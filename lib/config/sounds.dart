@@ -1,3 +1,5 @@
+/// Is paired with icons.dart
+
 class Sound {
   static const String whiteNoise = "audio/white-noise.mp3";
   static const String rain = "audio/rain.mp3";
