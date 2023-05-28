@@ -120,128 +120,126 @@ class _MyHomePageState extends State<MyHomePage> {
   /* BUILD */
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-        image: AssetImage(isDarkMode ? "assets/images/background.png" : "assets/images/background-light.png"),
-        fit: BoxFit.cover,
-      )),
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          titleTextStyle: TextStyle(
-            fontSize: width(context) * 0.085,
-            fontFamily: ConfigFonts.primaryFont,
-          ),
-          toolbarHeight: height(context) * 0.08,
-          actions: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(right: width(context) * 0.04),
-                child: CustomButton(
-                  bottomSheet: SettingsBottomSheet(
-                    changeSound: _changeSound,
-                    selectedSoundIndex: selectedSoundIndex,
-                    isDarkMode: isDarkMode,
-                  ),
-                  icon: Icons.settings,
-                ))
-          ],
-          leading: Padding(
-            padding: EdgeInsets.only(left: width(context) * 0.03),
-            child: IconButton(
-              onPressed: () => setState(() => isDarkMode = !isDarkMode),
-              icon: Icon(
-                isDarkMode ? Icons.sunny : Icons.nightlight,
-                color: isDarkMode ? ConfigColors.activeTimerColor : ConfigColors.textColor,
-                size: height(context) * 0.04,
+  Container build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+          image: AssetImage(isDarkMode ? "assets/images/background.png" : "assets/images/background-light.png"),
+          fit: BoxFit.cover,
+        )),
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          appBar: AppBar(
+            titleTextStyle: TextStyle(
+              fontSize: width(context) * 0.085,
+              fontFamily: ConfigFonts.primaryFont,
+            ),
+            toolbarHeight: height(context) * 0.08,
+            actions: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(right: width(context) * 0.04),
+                  child: CustomButton(
+                    bottomSheet: SettingsBottomSheet(
+                      changeSound: _changeSound,
+                      selectedSoundIndex: selectedSoundIndex,
+                      isDarkMode: isDarkMode,
+                    ),
+                    icon: Icons.settings,
+                  ))
+            ],
+            leading: Padding(
+              padding: EdgeInsets.only(left: width(context) * 0.03),
+              child: IconButton(
+                onPressed: () => setState(() => isDarkMode = !isDarkMode),
+                icon: Icon(
+                  isDarkMode ? Icons.sunny : Icons.nightlight,
+                  color: isDarkMode ? ConfigColors.activeTimerColor : ConfigColors.textColor,
+                  size: height(context) * 0.04,
+                ),
               ),
             ),
+            centerTitle: true,
+            backgroundColor: isDarkMode ? ConfigColors.primaryColor : LightModeColors.primaryColorLight,
+            title: Text(widget.title),
           ),
-          centerTitle: true,
-          backgroundColor: isDarkMode ? ConfigColors.primaryColor : LightModeColors.primaryColorLight,
-          title: Text(widget.title),
-        ),
-        /* BODY */
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              PlayButton(
-                noiseIsOn: _iconShowsStop,
-                toggleButton: _toggleBtn,
-                isDarkMode: isDarkMode,
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: ConfigColors.backgroundColor.withOpacity(0),
-        persistentFooterButtons: [
-          Column(
-            children: [
-              const CustomSizedBox(boxHeight: 0.1),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
-                  color: isDarkMode ? ConfigColors.timerBackground : LightModeColors.timerBackgroundLight,
+          /* BODY */
+          body: Center(
+            child: Column(
+              children: <Widget>[
+                PlayButton(
+                  noiseIsOn: _iconShowsStop,
+                  toggleButton: _toggleBtn,
+                  isDarkMode: isDarkMode,
                 ),
-                width: width(context) * 0.9,
-                padding: EdgeInsets.symmetric(vertical: height(context) * 0.02),
-                child: Column(
-                  children: <Widget>[
-                    Icon(
-                      _seconds < 1 ? Icons.timer_off : Icons.timer,
-                      color: _seconds < 1
-                          ? ConfigColors.disabledBtn
-                          : (audioIsPlaying ? ConfigColors.activeTimerColor : ConfigColors.textColor),
-                      size: width(context) * 0.11,
-                      shadows: applyShadow(),
-                    ),
-                    const CustomSizedBox(boxHeight: 0.01),
-                    Text(
-                      computeTime(_seconds),
-                      style: TextStyle(
-                        fontSize: width(context) * 0.1,
+              ],
+            ),
+          ),
+          backgroundColor: ConfigColors.backgroundColor.withOpacity(0),
+          persistentFooterButtons: [
+            Column(
+              children: [
+                const CustomSizedBox(boxHeight: 0.1),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    color: isDarkMode ? ConfigColors.timerBackground : LightModeColors.timerBackgroundLight,
+                  ),
+                  width: width(context) * 0.9,
+                  padding: EdgeInsets.symmetric(vertical: height(context) * 0.02),
+                  child: Column(
+                    children: <Widget>[
+                      Icon(
+                        _seconds < 1 ? Icons.timer_off : Icons.timer,
                         color: _seconds < 1
                             ? ConfigColors.disabledBtn
                             : (audioIsPlaying ? ConfigColors.activeTimerColor : ConfigColors.textColor),
-                        fontWeight: FontWeight.normal,
+                        size: width(context) * 0.11,
                         shadows: applyShadow(),
                       ),
-                    ),
-                    const CustomSizedBox(boxHeight: 0.025),
-                    /* TIMER BUTTONS */
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GestureDetector(
-                          onTap: _subtractTime,
-                          child: Icon(
-                            Icons.remove_circle,
-                            color: _seconds < 1
-                                ? ConfigColors.disabledBtn
-                                : (colorSubtractButton == true ? ConfigColors.activeTimerColor : ConfigColors.textColor),
-                            size: width(context) * 0.15,
-                            shadows: applyShadow(),
-                          ),
+                      const CustomSizedBox(boxHeight: 0.01),
+                      Text(
+                        computeTime(_seconds),
+                        style: TextStyle(
+                          fontSize: width(context) * 0.1,
+                          color: _seconds < 1
+                              ? ConfigColors.disabledBtn
+                              : (audioIsPlaying ? ConfigColors.activeTimerColor : ConfigColors.textColor),
+                          fontWeight: FontWeight.normal,
+                          shadows: applyShadow(),
                         ),
-                        GestureDetector(
-                          onTap: _addTime,
-                          child: Icon(
-                            Icons.add_circle,
-                            color: colorAddButton == true ? ConfigColors.activeTimerColor : ConfigColors.textColor,
-                            size: width(context) * 0.15,
-                            shadows: applyShadow(),
+                      ),
+                      const CustomSizedBox(boxHeight: 0.025),
+                      /* TIMER BUTTONS */
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          GestureDetector(
+                            onTap: _subtractTime,
+                            child: Icon(
+                              Icons.remove_circle,
+                              color: _seconds < 1
+                                  ? ConfigColors.disabledBtn
+                                  : (colorSubtractButton == true ? ConfigColors.activeTimerColor : ConfigColors.textColor),
+                              size: width(context) * 0.15,
+                              shadows: applyShadow(),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          GestureDetector(
+                            onTap: _addTime,
+                            child: Icon(
+                              Icons.add_circle,
+                              color: colorAddButton == true ? ConfigColors.activeTimerColor : ConfigColors.textColor,
+                              size: width(context) * 0.15,
+                              shadows: applyShadow(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+              ],
+            ),
+          ],
+        ),
+      );
 }

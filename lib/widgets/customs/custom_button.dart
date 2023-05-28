@@ -10,15 +10,10 @@ class CustomButton extends StatelessWidget {
   const CustomButton({Key? key, required this.bottomSheet, required this.icon}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return IconButton(
-        icon: Icon(
-          icon,
-          size: height(context) * 0.04,
-        ),
-        onPressed: () => showModalBottomSheet(
-              context: context,
-              builder: (BuildContext context) => bottomSheet,
-            ));
-  }
+  IconButton build(BuildContext context) => IconButton(
+      icon: Icon(icon, size: height(context) * 0.04),
+      onPressed: () => showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) => bottomSheet,
+          ));
 }

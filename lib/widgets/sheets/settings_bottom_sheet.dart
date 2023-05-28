@@ -37,35 +37,33 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
       });
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-          color: widget.isDarkMode ? const Color.fromARGB(247, 15, 22, 98) : LightModeColors.primaryColorLight,
-        ),
-        padding: EdgeInsets.all(width(context) * 0.04),
-        child: ListView(
-          children: [
-            Divider(
-              color: ConfigColors.disabledBtn,
-              endIndent: width(context) * 0.4,
-              indent: width(context) * 0.4,
-              thickness: 2,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: height(context) * 0.03),
-              child: Center(
-                  child: Text(
-                "Pick a sound",
-                style: TextStyle(
-                  color: ConfigColors.activeTimerColor,
-                  fontSize: width(context) * 0.08,
-                ),
-              )),
-            ),
-            ..._radioButtons()
-          ],
-        ));
-  }
+  Container build(BuildContext context) => Container(
+      decoration: BoxDecoration(
+        color: widget.isDarkMode ? const Color.fromARGB(247, 15, 22, 98) : LightModeColors.primaryColorLight,
+      ),
+      padding: EdgeInsets.all(width(context) * 0.04),
+      child: ListView(
+        children: [
+          Divider(
+            color: ConfigColors.disabledBtn,
+            endIndent: width(context) * 0.4,
+            indent: width(context) * 0.4,
+            thickness: 2,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: height(context) * 0.03),
+            child: Center(
+                child: Text(
+              "Pick a sound",
+              style: TextStyle(
+                color: ConfigColors.activeTimerColor,
+                fontSize: width(context) * 0.08,
+              ),
+            )),
+          ),
+          ..._radioButtons()
+        ],
+      ));
 
   List<Theme> _radioButtons() {
     List<Theme> radioButtons = [];
@@ -77,39 +75,37 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
     return radioButtons;
   }
 
-  Wrap _radioButton(int index, String soundName, IconData icon) {
-    return Wrap(children: [
-      Container(
-        decoration: BoxDecoration(
-            color: widget.isDarkMode ? const Color.fromARGB(208, 15, 22, 98) : ConfigColors.disabledBtn,
-            borderRadius: const BorderRadius.all(Radius.circular(15))),
-        child: RadioListTile(
-            value: index,
-            groupValue: selectedSound,
-            onChanged: (val) => setSelectedRadio(val!),
-            title: Row(
-              children: [
-                if (isLargeScreen(context)) SizedBox(width: width(context) * 0.05),
-                Icon(
-                  icon,
-                  color: index == selectedSound
-                      ? ConfigColors.activeTimerColor
-                      : (widget.isDarkMode ? ConfigColors.disabledBtn : LightModeColors.disabledBtnLight),
-                  size: width(context) * 0.07,
-                ),
-                SizedBox(width: width(context) * (isLargeScreen(context) ? 0.15 : 0.12)),
-                Text(formatSoundName(soundName),
-                    style: TextStyle(
-                        color: index != selectedSound ? ConfigColors.textColor.withOpacity(0.4) : ConfigColors.textColor,
-                        fontSize: width(context) * 0.06)),
-              ],
-            ),
-            activeColor: Colors.transparent),
-      ),
-      const Divider(
-        color: Colors.transparent,
-        thickness: 1,
-      ),
-    ]);
-  }
+  Wrap _radioButton(int index, String soundName, IconData icon) => Wrap(children: [
+        Container(
+          decoration: BoxDecoration(
+              color: widget.isDarkMode ? const Color.fromARGB(208, 15, 22, 98) : ConfigColors.disabledBtn,
+              borderRadius: const BorderRadius.all(Radius.circular(15))),
+          child: RadioListTile(
+              value: index,
+              groupValue: selectedSound,
+              onChanged: (val) => setSelectedRadio(val!),
+              title: Row(
+                children: [
+                  if (isLargeScreen(context)) SizedBox(width: width(context) * 0.05),
+                  Icon(
+                    icon,
+                    color: index == selectedSound
+                        ? ConfigColors.activeTimerColor
+                        : (widget.isDarkMode ? ConfigColors.disabledBtn : LightModeColors.disabledBtnLight),
+                    size: width(context) * 0.07,
+                  ),
+                  SizedBox(width: width(context) * (isLargeScreen(context) ? 0.15 : 0.12)),
+                  Text(formatSoundName(soundName),
+                      style: TextStyle(
+                          color: index != selectedSound ? ConfigColors.textColor.withOpacity(0.4) : ConfigColors.textColor,
+                          fontSize: width(context) * 0.06)),
+                ],
+              ),
+              activeColor: Colors.transparent),
+        ),
+        const Divider(
+          color: Colors.transparent,
+          thickness: 1,
+        ),
+      ]);
 }

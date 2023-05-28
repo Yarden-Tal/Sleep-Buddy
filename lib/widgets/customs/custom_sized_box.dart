@@ -6,5 +6,5 @@ class CustomSizedBox extends StatelessWidget {
   const CustomSizedBox({super.key, required this.boxHeight});
 
   @override
-  Widget build(BuildContext context) => Container(height: height(context) * boxHeight);
+  Container build(BuildContext context) => Container(height: height(context) * boxHeight);
 }

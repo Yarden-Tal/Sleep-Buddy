@@ -41,25 +41,21 @@ class _PlayButtonState extends State<PlayButton> with SingleTickerProviderStateM
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.only(top: height(context) * 0.16),
-        child: AnimatedBuilder(
-            animation: _controller,
-            builder: (BuildContext context, Widget? child) {
-              return ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(24),
-                      backgroundColor: widget.isDarkMode ? ConfigColors.primaryColor : LightModeColors.primaryColorLight,
-                      foregroundColor: (_fgColorAnimation.value)),
-                  onPressed: () => {
-                        _controller.forward().then((value) => _controller.reverse()),
-                        widget.toggleButton(),
-                      },
-                  child: toggleIcon(context));
-            }));
-  }
+  Padding build(BuildContext context) => Padding(
+      padding: EdgeInsets.only(top: height(context) * 0.16),
+      child: AnimatedBuilder(
+          animation: _controller,
+          builder: (BuildContext context, Widget? child) => ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  shape: const CircleBorder(),
+                  padding: const EdgeInsets.all(24),
+                  backgroundColor: widget.isDarkMode ? ConfigColors.primaryColor : LightModeColors.primaryColorLight,
+                  foregroundColor: (_fgColorAnimation.value)),
+              onPressed: () => {
+                    _controller.forward().then((value) => _controller.reverse()),
+                    widget.toggleButton(),
+                  },
+              child: toggleIcon(context))));
 
   double returnIconSize(BuildContext context) => width(context) * 0.25;
 
