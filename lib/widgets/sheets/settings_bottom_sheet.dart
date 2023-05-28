@@ -31,9 +31,9 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
   }
 
   void setSelectedRadio(int val) async => setState(() {
+        Navigator.pop(context);
         selectedSound = val;
         widget.changeSound(val);
-        Navigator.pop(context);
       });
 
   @override
@@ -45,10 +45,10 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
         padding: EdgeInsets.all(width(context) * 0.04),
         child: ListView(
           children: [
-            const Divider(
+            Divider(
               color: ConfigColors.disabledBtn,
-              endIndent: 150,
-              indent: 150,
+              endIndent: width(context) * 0.4,
+              indent: width(context) * 0.4,
               thickness: 2,
             ),
             Padding(
@@ -67,46 +67,49 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
         ));
   }
 
-  Widget _radioButton(int index, String soundName, IconData icon) {
+  List<Theme> _radioButtons() {
+    List<Theme> radioButtons = [];
+    for (int i = 0; i < sounds.length; i++) {
+      radioButtons.add(Theme(
+          data: Theme.of(context).copyWith(unselectedWidgetColor: Colors.transparent),
+          child: _radioButton(i + 1, sounds[i], icons[i])));
+    }
+    return radioButtons;
+  }
+
+  Wrap _radioButton(int index, String soundName, IconData icon) {
     return Wrap(children: [
       Container(
         decoration: BoxDecoration(
             color: widget.isDarkMode ? const Color.fromARGB(208, 15, 22, 98) : ConfigColors.disabledBtn,
-            borderRadius: BorderRadius.all(Radius.circular(15))),
+            borderRadius: const BorderRadius.all(Radius.circular(15))),
         child: RadioListTile(
             value: index,
             groupValue: selectedSound,
-            onChanged: (val) {
-              setSelectedRadio(val!);
-            },
+            onChanged: (val) => setSelectedRadio(val!),
             title: Row(
               children: [
+                if (isLargeScreen(context)) SizedBox(width: width(context) * 0.05),
                 Icon(
                   icon,
-                  color: ConfigColors.activeTimerColor,
+                  color: index == selectedSound
+                      ? ConfigColors.activeTimerColor
+                      : (widget.isDarkMode ? ConfigColors.disabledBtn : LightModeColors.disabledBtnLight),
                   size: width(context) * 0.07,
                 ),
-                SizedBox(width: width(context) * 0.08),
+                SizedBox(width: width(context) * (isLargeScreen(context) ? 0.15 : 0.12)),
                 Text(formatSoundName(soundName),
-                    style: TextStyle(color: ConfigColors.textColor, fontSize: width(context) * 0.06)),
+                    style: TextStyle(
+                        color: index != selectedSound ? ConfigColors.textColor.withOpacity(0.4) : ConfigColors.textColor,
+                        fontSize: width(context) * 0.06)),
               ],
             ),
-            activeColor: ConfigColors.activeTimerColor),
+            activeColor: Colors.transparent),
       ),
       const Divider(
         color: Colors.transparent,
         thickness: 1,
       ),
     ]);
-  }
-
-  List<Theme> _radioButtons() {
-    List<Theme> radioButtons = [];
-    for (int i = 0; i < sounds.length; i++) {
-      radioButtons.add(Theme(
-          data: Theme.of(context).copyWith(unselectedWidgetColor: ConfigColors.backgroundColor),
-          child: _radioButton(i + 1, sounds[i], icons[i])));
-    }
-    return radioButtons;
   }
 }

@@ -137,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
           toolbarHeight: height(context) * 0.08,
           actions: <Widget>[
             Padding(
-                padding: EdgeInsets.only(right: width(context) * 0.03),
+                padding: EdgeInsets.only(right: width(context) * 0.04),
                 child: CustomButton(
                   bottomSheet: SettingsBottomSheet(
                     changeSound: _changeSound,
@@ -178,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
         persistentFooterButtons: [
           Column(
             children: [
-              const CustomSizedBox(boxHeight: 0.2),
+              const CustomSizedBox(boxHeight: 0.1),
               Container(
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(15)),
