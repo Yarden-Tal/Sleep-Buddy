@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/fonts.dart';
 import 'package:white_noise/widgets/home_page.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Sleep Buddy',
-        theme: ThemeData(fontFamily: ConfigFonts.primaryFont, fontFamilyFallback: ConfigFonts.fallBackFonts),
-        home: const MyHomePage(title: 'Sleep Buddy'));
-  }
+  Widget build(BuildContext context) => MaterialApp(
+      title: 'Sleep Buddy',
+      theme: ThemeData(fontFamily: ConfigFonts.primaryFont, fontFamilyFallback: ConfigFonts.fallBackFonts),
+      home: const MyHomePage(title: 'Sleep Buddy'));
 }
