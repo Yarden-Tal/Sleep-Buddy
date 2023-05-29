@@ -1,5 +1,3 @@
-// import 'package:white_noise/config/sounds.dart';
-
 /// Capitalizes & removes file-name and file-type
 String formatSoundName(String sound) {
   String cleanSoundName = sound.replaceAll("audio/", "").replaceAll(".mp3", "").replaceAll("-", " ");

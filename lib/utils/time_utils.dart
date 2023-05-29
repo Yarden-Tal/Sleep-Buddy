@@ -1,3 +1,4 @@
+/// Format each part of the computed time for the timer
 String formatTimePart(int timePart) => timePart.toString().padLeft(2, '0');
 
 String computeTime(int time) {
