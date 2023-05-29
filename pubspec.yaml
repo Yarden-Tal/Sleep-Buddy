@@ -39,6 +39,13 @@ dependencies:
   volume_controller: ^2.0.6
   flutter_launcher_icons: ^0.13.1
 
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
+  # adaptive_icon_background: "#ffffff"
+  # adaptive_icon_foreground: "assets/ ... "
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
