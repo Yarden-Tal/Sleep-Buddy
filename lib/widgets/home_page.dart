@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/fonts.dart';
+import 'package:white_noise/config/images.dart';
 import 'package:white_noise/config/responsivity_tools.dart';
 import 'package:white_noise/config/shadow.dart';
 import 'package:white_noise/config/sounds.dart';
@@ -143,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
 // Local widgets
   BoxDecoration backgroundImg() => BoxDecoration(
           image: DecorationImage(
-        image: AssetImage(isDarkMode ? "assets/images/background.png" : "assets/images/background-light.png"),
+        image: isDarkMode ? Images.darkModeImg : Images.lightModeImg,
         fit: BoxFit.cover,
       ));
 
@@ -168,7 +169,11 @@ class _MyHomePageState extends State<MyHomePage> {
         leading: Padding(
           padding: EdgeInsets.only(left: width(context) * 0.03),
           child: IconButton(
-            onPressed: () => setState(() => isDarkMode = !isDarkMode),
+            onPressed: () => setState(() {
+              Timer(const Duration(milliseconds: 200), () {
+                isDarkMode = !isDarkMode;
+              });
+            }),
             icon: Icon(
               isDarkMode ? Icons.sunny : Icons.nightlight,
               color: isDarkMode ? ConfigColors.activeTimerColor : ConfigColors.textColor,
