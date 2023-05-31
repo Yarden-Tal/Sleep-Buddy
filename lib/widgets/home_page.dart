@@ -206,7 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   size: width(context) * 0.11,
                   shadows: applyShadow(),
                 ),
-                const CustomSizedBox(boxHeight: 0.01),
+                const CustomSizedBox(boxHeight: 0.007),
                 Text(
                   computeTime(_seconds),
                   style: TextStyle(
@@ -218,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     shadows: applyShadow(),
                   ),
                 ),
-                const CustomSizedBox(boxHeight: 0.025),
+                const CustomSizedBox(boxHeight: 0.007),
                 _timerButtons(),
               ],
             ),

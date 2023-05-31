@@ -4,6 +4,7 @@ import 'package:white_noise/config/icons.dart';
 import 'package:white_noise/config/responsivity_tools.dart';
 import 'package:white_noise/config/sounds.dart';
 import 'package:white_noise/utils/sound_utils.dart';
+import 'package:white_noise/widgets/customs/custom_sized_box.dart';
 
 class SettingsBottomSheet extends StatefulWidget {
   final dynamic changeSound;
@@ -37,12 +38,13 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
       });
 
   @override
-  Container build(BuildContext context) => Container(
+  Widget build(BuildContext context) => Container(
       decoration: BoxDecoration(
         color: widget.isDarkMode ? const Color.fromARGB(247, 15, 22, 98) : LightModeColors.primaryColorLight,
       ),
       padding: EdgeInsets.all(width(context) * 0.04),
       child: ListView(
+        shrinkWrap: true,
         children: [
           Divider(
             color: ConfigColors.disabledBtn,
@@ -51,7 +53,7 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
             thickness: 2,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: height(context) * 0.03),
+            padding: EdgeInsets.symmetric(vertical: height(context) * 0.02),
             child: Center(
                 child: Text(
               "Pick a sound",
@@ -103,9 +105,6 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
               ),
               activeColor: Colors.transparent),
         ),
-        const Divider(
-          color: Colors.transparent,
-          thickness: 1,
-        ),
+        CustomSizedBox(boxHeight: height(context) * 0.000015)
       ]);
 }
