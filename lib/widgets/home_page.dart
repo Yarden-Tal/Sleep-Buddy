@@ -183,11 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
         leading: Padding(
           padding: EdgeInsets.only(left: width(context) * 0.03),
           child: IconButton(
-            onPressed: () => setState(() {
-              Timer(const Duration(milliseconds: 200), () {
-                isDarkMode = !isDarkMode;
-              });
-            }),
+            onPressed: () => setState(() => isDarkMode = !isDarkMode),
             icon: Icon(
               isDarkMode ? Icons.sunny : Icons.nightlight,
               color: isDarkMode ? ConfigColors.activeTimerColor : ConfigColors.textColor,
