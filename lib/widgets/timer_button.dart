@@ -6,16 +6,18 @@ import 'package:white_noise/config/shadow.dart';
 class TimerButton extends StatefulWidget {
   const TimerButton({
     required this.seconds,
-    required this.isTapColor,
+    required this.onTapColor,
     required this.icon,
     required this.func,
     super.key,
+    required this.isDarkmode,
   });
 
   final int seconds;
-  final bool isTapColor;
+  final bool onTapColor;
   final IconData icon;
   final void Function()? func;
+  final bool isDarkmode;
 
   @override
   State<TimerButton> createState() => _TimerButtonState();
@@ -28,8 +30,10 @@ class _TimerButtonState extends State<TimerButton> {
         child: Icon(
           widget.icon,
           color: widget.icon == Icons.remove_circle && widget.seconds < 1
-              ? ConfigColors.disabledBtn
-              : (widget.isTapColor == true ? ConfigColors.activeTimerColor : ConfigColors.textColor),
+              ? widget.isDarkmode
+                  ? ConfigColors.disabledBtn
+                  : LightModeColors.disabledBtnLight
+              : (widget.onTapColor == true ? ConfigColors.activeTimerColor : ConfigColors.textColor),
           size: width(context) * 0.15,
           shadows: applyShadow(),
         ),

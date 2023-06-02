@@ -211,7 +211,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 Icon(
                   _seconds < 1 ? Icons.timer_off : Icons.timer,
                   color: _seconds < 1
-                      ? ConfigColors.disabledBtn
+                      ? isDarkMode
+                          ? ConfigColors.disabledBtn
+                          : LightModeColors.disabledBtnLight
                       : (audioIsPlaying ? ConfigColors.activeTimerColor : ConfigColors.textColor),
                   size: width(context) * 0.11,
                   shadows: applyShadow(),
@@ -222,7 +224,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(
                     fontSize: width(context) * 0.1,
                     color: _seconds < 1
-                        ? ConfigColors.disabledBtn
+                        ? isDarkMode
+                            ? ConfigColors.disabledBtn
+                            : LightModeColors.disabledBtnLight
                         : (audioIsPlaying ? ConfigColors.activeTimerColor : ConfigColors.textColor),
                     fontWeight: FontWeight.normal,
                     shadows: applyShadow(),
@@ -240,16 +244,17 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           TimerButton(
-            seconds: _seconds,
-            isTapColor: colorSubtractButton,
-            icon: Icons.remove_circle,
-            func: _subtractTime,
-          ),
+              seconds: _seconds,
+              onTapColor: colorSubtractButton,
+              icon: Icons.remove_circle,
+              func: _subtractTime,
+              isDarkmode: isDarkMode),
           TimerButton(
             seconds: _seconds,
-            isTapColor: colorAddButton,
+            onTapColor: colorAddButton,
             icon: Icons.add_circle,
             func: _addTime,
+            isDarkmode: isDarkMode,
           ),
         ],
       );

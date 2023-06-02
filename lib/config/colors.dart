@@ -13,7 +13,7 @@ class LightModeColors {
   static const Color primaryColorLight = Color.fromARGB(255, 110, 96, 115);
   static const Color backgroundColorLight = Colors.white;
   static const Color textColorLight = Colors.black;
-  static const Color disabledBtnLight = Color.fromARGB(255, 87, 87, 87);
+  static const Color disabledBtnLight = Color.fromARGB(172, 110, 96, 115);
   static const Color activeTimerColorLight = Color.fromARGB(255, 251, 234, 166);
   static const Color timerBackgroundLight = Color.fromARGB(140, 230, 230, 230);
 }
