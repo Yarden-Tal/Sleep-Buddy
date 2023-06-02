@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:volume_controller/volume_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/fonts.dart';
@@ -7,6 +8,7 @@ import 'package:white_noise/config/images.dart';
 import 'package:white_noise/config/responsivity_tools.dart';
 import 'package:white_noise/config/shadow.dart';
 import 'package:white_noise/config/sounds.dart';
+import 'package:white_noise/utils/get_snack_bar.dart';
 import 'package:white_noise/widgets/customs/custom_button.dart';
 import 'package:white_noise/widgets/customs/custom_sized_box.dart';
 import 'package:white_noise/widgets/sheets/settings_bottom_sheet.dart';
@@ -34,11 +36,14 @@ class _MyHomePageState extends State<MyHomePage> {
   bool colorAddButton = false;
   bool colorSubtractButton = false;
   bool isDarkMode = true;
+  double _volumeListenerValue = 1;
 
   @override
   void initState() {
     audioPlayer.setSourceAsset(sounds[0]);
     selectedSoundIndex = 1;
+    VolumeController().listener((volume) => setState(() => _volumeListenerValue = volume));
+    VolumeController().getVolume().then((volume) => _volumeListenerValue = volume);
     super.initState();
   }
 
@@ -50,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
     colorAddButton = false;
     colorSubtractButton = false;
     _timer?.cancel();
+    VolumeController().removeListener();
     super.dispose();
   }
 
@@ -73,6 +79,11 @@ class _MyHomePageState extends State<MyHomePage> {
       await audioPlayer.pause();
       _stopTimer();
     } else if (!audioIsPlaying) {
+      VolumeController().listener((volume) => setState(() => _volumeListenerValue = volume));
+      VolumeController().getVolume().then((volume) {
+        setState(() => _volumeListenerValue = volume);
+        getSnackBar(_volumeListenerValue, context);
+      });
       await audioPlayer.setReleaseMode(ReleaseMode.loop);
       await audioPlayer.resume();
       _startTimer();
@@ -127,17 +138,20 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Scaffold(
           resizeToAvoidBottomInset: true,
           appBar: _appBar(context),
-          body: Center(
-            child: PlayButton(
-              noiseIsOn: _iconShowsStop,
-              toggleButton: _toggleBtn,
-              isDarkMode: isDarkMode,
-            ),
+          body: Flex(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            direction: Axis.vertical,
+            children: [
+              PlayButton(
+                noiseIsOn: _iconShowsStop,
+                toggleButton: _toggleBtn,
+                isDarkMode: isDarkMode,
+              ),
+              _timerSection(context),
+              CustomSizedBox(boxHeight: height(context) * 0.00001)
+            ],
           ),
-          backgroundColor: ConfigColors.backgroundColor.withOpacity(0),
-          persistentFooterButtons: [
-            _timerSection(context),
-          ],
+          backgroundColor: Colors.transparent,
         ),
       );
 
