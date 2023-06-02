@@ -148,7 +148,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 isDarkMode: isDarkMode,
               ),
               _timerSection(context),
-              CustomSizedBox(boxHeight: height(context) * 0.00001)
             ],
           ),
           backgroundColor: Colors.transparent,
@@ -200,6 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           const CustomSizedBox(boxHeight: 0.1),
           Container(
+            margin: EdgeInsets.only(bottom: height(context) * 0.02),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(15)),
               color: isDarkMode ? ConfigColors.timerBackground : LightModeColors.timerBackgroundLight,

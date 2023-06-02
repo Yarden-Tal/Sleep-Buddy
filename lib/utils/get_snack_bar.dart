@@ -3,7 +3,7 @@ import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/responsivity_tools.dart';
 
 void getSnackBar(double volume, BuildContext context) {
-  if (volume == 0) {
+  if (volume <= 0.1) {
     SnackBar snackBar = SnackBar(
       showCloseIcon: true,
       closeIconColor: ConfigColors.textColor,
