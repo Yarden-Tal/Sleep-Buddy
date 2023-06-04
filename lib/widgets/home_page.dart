@@ -142,11 +142,8 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             direction: Axis.vertical,
             children: [
-              PlayButton(
-                noiseIsOn: _iconShowsStop,
-                toggleButton: _toggleBtn,
-                isDarkMode: isDarkMode,
-              ),
+              CustomSizedBox(boxHeight: height(context) * 0.000001),
+              PlayButton(noiseIsOn: _iconShowsStop, toggleButton: _toggleBtn, isDarkMode: isDarkMode),
               _timerSection(context),
             ],
           ),
@@ -167,33 +164,37 @@ class _MyHomePageState extends State<MyHomePage> {
           fontFamily: ConfigFonts.primaryFont,
         ),
         toolbarHeight: height(context) * 0.08,
-        actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: width(context) * 0.04),
-              child: CustomButton(
-                bottomSheet: SettingsBottomSheet(
-                  changeSound: _changeSound,
-                  selectedSoundIndex: selectedSoundIndex,
-                  isDarkMode: isDarkMode,
-                ),
-                icon: Icons.settings,
-              ))
-        ],
-        leading: Padding(
-          padding: EdgeInsets.only(left: width(context) * 0.03),
-          child: IconButton(
-            onPressed: () => setState(() => isDarkMode = !isDarkMode),
-            icon: Icon(
-              isDarkMode ? Icons.sunny : Icons.nightlight,
-              color: isDarkMode ? ConfigColors.activeTimerColor : ConfigColors.textColor,
-              size: height(context) * 0.04,
-            ),
-          ),
-        ),
+        actions: settingsButton(context),
+        leading: darkModeButton(context),
         centerTitle: true,
         backgroundColor: isDarkMode ? ConfigColors.primaryColor : LightModeColors.primaryColorLight,
         title: Text(widget.title),
       );
+
+  Padding darkModeButton(BuildContext context) => Padding(
+        padding: EdgeInsets.only(left: width(context) * 0.03),
+        child: IconButton(
+          onPressed: () => setState(() => isDarkMode = !isDarkMode),
+          icon: Icon(
+            isDarkMode ? Icons.sunny : Icons.nightlight,
+            color: isDarkMode ? ConfigColors.activeTimerColor : ConfigColors.textColor,
+            size: height(context) * 0.04,
+          ),
+        ),
+      );
+
+  List<Widget> settingsButton(BuildContext context) => <Widget>[
+        Padding(
+            padding: EdgeInsets.only(right: width(context) * 0.04),
+            child: CustomButton(
+              bottomSheet: SettingsBottomSheet(
+                changeSound: _changeSound,
+                selectedSoundIndex: selectedSoundIndex,
+                isDarkMode: isDarkMode,
+              ),
+              icon: Icons.settings,
+            ))
+      ];
 
   Column _timerSection(BuildContext context) => Column(
         children: [
