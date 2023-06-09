@@ -58,7 +58,7 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
                 child: Text(
               "Pick a sound",
               style: TextStyle(
-                color: Color.fromARGB(255, 247, 239, 205),
+                color: const Color.fromARGB(255, 247, 239, 205),
                 fontSize: width(context) * 0.08,
               ),
             )),
