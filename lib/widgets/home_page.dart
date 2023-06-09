@@ -173,13 +173,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         toolbarHeight: height(context) * 0.08,
         actions: settingsButton(context, isDarkMode, changeSound, selectedSoundIndex),
-        leading: darkModeButton(context),
+        leading: _darkModeButton(context),
         centerTitle: true,
         backgroundColor: getAppbarBckColor(isDarkMode),
         title: Text(widget.title),
       );
 
-  Padding darkModeButton(BuildContext context) => Padding(
+  Padding _darkModeButton(BuildContext context) => Padding(
         padding: EdgeInsets.only(left: width(context) * 0.03),
         child: IconButton(
           onPressed: () => setState(() => isDarkMode = !isDarkMode),
