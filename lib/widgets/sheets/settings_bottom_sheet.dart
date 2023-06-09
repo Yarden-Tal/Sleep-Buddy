@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/icons.dart';
 import 'package:white_noise/config/responsivity_tools.dart';
 import 'package:white_noise/config/sounds.dart';
+import 'package:white_noise/utils/close_bottom_sheet.dart';
+import 'package:white_noise/utils/color_getters.dart';
 import 'package:white_noise/utils/sound_utils.dart';
+import 'package:white_noise/widgets/bottom_sheet_title.dart';
 import 'package:white_noise/widgets/customs/custom_sized_box.dart';
+import 'package:white_noise/widgets/top_divider.dart';
 
 class SettingsBottomSheet extends StatefulWidget {
   final dynamic changeSound;
@@ -31,39 +34,24 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
     selectedSound = widget.selectedSoundIndex;
   }
 
-  void setSelectedRadio(int val) async => setState(() {
-        Navigator.pop(context);
+  void _setSelectedRadio(int val) async => setState(() {
         selectedSound = val;
         widget.changeSound(val);
+        closeBottomSheet(context);
       });
 
   @override
   Widget build(BuildContext context) => Container(
       decoration: BoxDecoration(
-        color: widget.isDarkMode ? ConfigColors.primaryColor : LightModeColors.primaryColorLight,
+        color: getBackgroundColor(widget.isDarkMode),
       ),
       padding: EdgeInsets.all(width(context) * 0.04),
       child: ListView(
         shrinkWrap: true,
         children: [
-          Divider(
-            color: ConfigColors.disabledBtn,
-            endIndent: width(context) * 0.4,
-            indent: width(context) * 0.4,
-            thickness: 2,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: height(context) * 0.02),
-            child: Center(
-                child: Text(
-              "Pick a sound",
-              style: TextStyle(
-                color: const Color.fromARGB(255, 247, 239, 205),
-                fontSize: width(context) * 0.08,
-              ),
-            )),
-          ),
-          ..._radioButtons()
+          const TopDivider(),
+          const BottomSheetTitle(),
+          ..._radioButtons(),
         ],
       ));
 
@@ -79,30 +67,26 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
 
   Wrap _radioButton(int index, String soundName, IconData icon) => Wrap(children: [
         Container(
-          decoration: BoxDecoration(
-              color: widget.isDarkMode ? ConfigColors.disabledBtn : LightModeColors.disabledBtnLight,
-              borderRadius: const BorderRadius.all(Radius.circular(15))),
+          decoration:
+              BoxDecoration(color: getBtnColor(widget.isDarkMode), borderRadius: const BorderRadius.all(Radius.circular(15))),
           child: RadioListTile(
               value: index,
               groupValue: selectedSound,
-              onChanged: (val) => setSelectedRadio(val!),
+              onChanged: (val) => _setSelectedRadio(val!),
               title: Row(
                 children: [
                   if (isLargeScreen(context)) SizedBox(width: width(context) * 0.05),
                   Icon(
                     icon,
-                    color: index == selectedSound
-                        ? widget.isDarkMode
-                            ? ConfigColors.activeTimerColor
-                            : const Color.fromARGB(255, 243, 233, 192)
-                        : (widget.isDarkMode ? ConfigColors.disabledBtn : const Color.fromARGB(255, 80, 57, 88)),
+                    color: getIconColor(index, selectedSound, widget.isDarkMode),
                     size: width(context) * 0.07,
                   ),
                   SizedBox(width: width(context) * (isLargeScreen(context) ? 0.15 : 0.12)),
                   Text(formatSoundName(soundName),
                       style: TextStyle(
-                          color: index != selectedSound ? ConfigColors.textColor.withOpacity(0.4) : ConfigColors.textColor,
-                          fontSize: width(context) * 0.06)),
+                        color: getBtnTextColor(index, selectedSound),
+                        fontSize: width(context) * 0.06,
+                      )),
                 ],
               ),
               activeColor: Colors.transparent),
