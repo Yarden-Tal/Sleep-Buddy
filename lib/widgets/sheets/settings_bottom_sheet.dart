@@ -40,7 +40,7 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
   @override
   Widget build(BuildContext context) => Container(
       decoration: BoxDecoration(
-        color: widget.isDarkMode ? const Color.fromARGB(247, 15, 22, 98) : LightModeColors.primaryColorLight,
+        color: widget.isDarkMode ? ConfigColors.primaryColor : LightModeColors.primaryColorLight,
       ),
       padding: EdgeInsets.all(width(context) * 0.04),
       child: ListView(
@@ -58,7 +58,7 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
                 child: Text(
               "Pick a sound",
               style: TextStyle(
-                color: ConfigColors.activeTimerColor,
+                color: Color.fromARGB(255, 247, 239, 205),
                 fontSize: width(context) * 0.08,
               ),
             )),
@@ -80,7 +80,7 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
   Wrap _radioButton(int index, String soundName, IconData icon) => Wrap(children: [
         Container(
           decoration: BoxDecoration(
-              color: widget.isDarkMode ? const Color.fromARGB(208, 15, 22, 98) : ConfigColors.disabledBtn,
+              color: widget.isDarkMode ? ConfigColors.disabledBtn : LightModeColors.disabledBtnLight,
               borderRadius: const BorderRadius.all(Radius.circular(15))),
           child: RadioListTile(
               value: index,
@@ -92,8 +92,10 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
                   Icon(
                     icon,
                     color: index == selectedSound
-                        ? ConfigColors.activeTimerColor
-                        : (widget.isDarkMode ? ConfigColors.disabledBtn : LightModeColors.disabledBtnLight),
+                        ? widget.isDarkMode
+                            ? ConfigColors.activeTimerColor
+                            : const Color.fromARGB(255, 243, 233, 192)
+                        : (widget.isDarkMode ? ConfigColors.disabledBtn : const Color.fromARGB(255, 80, 57, 88)),
                     size: width(context) * 0.07,
                   ),
                   SizedBox(width: width(context) * (isLargeScreen(context) ? 0.15 : 0.12)),
