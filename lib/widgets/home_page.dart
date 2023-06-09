@@ -2,19 +2,18 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:volume_controller/volume_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/fonts.dart';
-import 'package:white_noise/config/images.dart';
 import 'package:white_noise/config/responsivity_tools.dart';
 import 'package:white_noise/config/shadow.dart';
 import 'package:white_noise/config/sounds.dart';
+import 'package:white_noise/utils/color_getters.dart';
 import 'package:white_noise/utils/get_snack_bar.dart';
-import 'package:white_noise/widgets/customs/custom_button.dart';
+import 'package:white_noise/widgets/bck_image.dart';
 import 'package:white_noise/widgets/customs/custom_sized_box.dart';
-import 'package:white_noise/widgets/sheets/settings_bottom_sheet.dart';
+import 'package:white_noise/widgets/settings_btn.dart';
 import 'package:white_noise/utils/time_utils.dart';
 import 'package:white_noise/widgets/play_button.dart';
-import 'package:white_noise/widgets/timer_button.dart';
+import 'package:white_noise/widgets/timer_buttons.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -29,9 +28,10 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _iconShowsStop = false;
   bool audioIsPlaying = false;
   final audioPlayer = AudioPlayer(playerId: "sound");
-  final Duration _stepDuration = const Duration(minutes: 30);
+  // final audioPlayer2 = AudioPlayer(playerId: "sound2");
+  final _stepDuration = const Duration(minutes: 30);
   int selectedSoundIndex = 1;
-  int _seconds = 0;
+  int seconds = 0;
   Timer? _timer;
   bool colorAddButton = false;
   bool colorSubtractButton = false;
@@ -41,6 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     audioPlayer.setSourceAsset(sounds[0]);
+    // audioPlayer2.setSourceAsset(sounds[0]);
     selectedSoundIndex = 1;
     VolumeController().listener((volume) => setState(() => _volumeListenerValue = volume));
     VolumeController().getVolume().then((volume) => _volumeListenerValue = volume);
@@ -50,6 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     audioPlayer.dispose();
+    // audioPlayer2.dispose();
     _iconShowsStop = false;
     audioIsPlaying = false;
     colorAddButton = false;
@@ -66,10 +68,11 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() => _iconShowsStop = !_iconShowsStop);
   }
 
-  Future<void> _changeSound(int newSound) async {
+  Future<void> changeSound(int newSound) async {
     if (newSound >= 1 && newSound <= sounds.length) {
       String selectedSound = sounds[newSound - 1];
       await audioPlayer.setSourceAsset(selectedSound);
+      // await audioPlayer2.setSourceAsset(selectedSound);
       setState(() => selectedSoundIndex = newSound);
     }
   }
@@ -77,6 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future _toggleAudio() async {
     if (audioIsPlaying) {
       await audioPlayer.pause();
+      // await audioPlayer2.pause();
       _stopTimer();
     } else if (!audioIsPlaying) {
       VolumeController().listener((volume) => setState(() => _volumeListenerValue = volume));
@@ -85,48 +89,57 @@ class _MyHomePageState extends State<MyHomePage> {
         getSnackBar(_volumeListenerValue, context);
       });
       await audioPlayer.setReleaseMode(ReleaseMode.loop);
+      await audioPlayer.setPlayerMode(PlayerMode.lowLatency);
+      // await audioPlayer.setVolume(0.7);
       await audioPlayer.resume();
+      Timer(const Duration(seconds: 3), () async {
+        // await audioPlayer2.setReleaseMode(ReleaseMode.loop);
+        // await audioPlayer2.setPlayerMode(PlayerMode.lowLatency);
+        // await audioPlayer2.setVolume(0.5);
+        // await audioPlayer.setVolume(0.5);
+        // await audioPlayer2.resume();
+      });
       _startTimer();
     }
     audioIsPlaying = !audioIsPlaying;
   }
 
   void _startTimer() {
-    if ((_timer != null && _timer!.isActive) || _seconds < 1) return;
+    if ((_timer != null && _timer!.isActive) || seconds < 1) return;
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
         oneSec,
         (Timer timer) => setState(() {
-              if (_seconds < 1) {
+              if (seconds < 1) {
                 _iconShowsStop = false;
                 _toggleAudio();
                 _stopTimer();
               } else {
-                _seconds--;
+                seconds--;
               }
             }));
   }
 
   void _stopTimer() => _timer?.cancel();
 
-  void _addTime() => setState(() {
+  void addTime() => setState(() {
         Timer(const Duration(milliseconds: 100), () {
           setState(() => colorAddButton = false);
         });
-        _seconds += _stepDuration.inSeconds;
+        seconds += _stepDuration.inSeconds;
         if (audioIsPlaying) _startTimer();
         setState(() => colorAddButton = true);
       });
 
-  void _subtractTime() => setState(() {
-        if (_seconds >= _stepDuration.inSeconds) {
+  void subtractTime() => setState(() {
+        if (seconds >= _stepDuration.inSeconds) {
           Timer(const Duration(milliseconds: 100), () {
             setState(() => colorSubtractButton = false);
           });
-          _seconds -= _stepDuration.inSeconds;
+          seconds -= _stepDuration.inSeconds;
           setState(() => colorSubtractButton = true);
         } else {
-          _seconds = 0;
+          seconds = 0;
         }
       });
 
@@ -134,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Container build(BuildContext context) => Container(
-        decoration: backgroundImg(),
+        decoration: backgroundImg(isDarkMode),
         child: Scaffold(
           resizeToAvoidBottomInset: true,
           appBar: _appBar(context),
@@ -152,11 +165,6 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
 // Local widgets
-  BoxDecoration backgroundImg() => BoxDecoration(
-          image: DecorationImage(
-        image: isDarkMode ? Images.darkModeImg : Images.lightModeImg,
-        fit: BoxFit.cover,
-      ));
 
   AppBar _appBar(BuildContext context) => AppBar(
         titleTextStyle: TextStyle(
@@ -164,10 +172,10 @@ class _MyHomePageState extends State<MyHomePage> {
           fontFamily: ConfigFonts.primaryFont,
         ),
         toolbarHeight: height(context) * 0.08,
-        actions: settingsButton(context),
+        actions: settingsButton(context, isDarkMode, changeSound, selectedSoundIndex),
         leading: darkModeButton(context),
         centerTitle: true,
-        backgroundColor: isDarkMode ? ConfigColors.primaryColor : LightModeColors.primaryColorLight,
+        backgroundColor: getAppbarBckColor(isDarkMode),
         title: Text(widget.title),
       );
 
@@ -177,24 +185,11 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: () => setState(() => isDarkMode = !isDarkMode),
           icon: Icon(
             isDarkMode ? Icons.sunny : Icons.nightlight,
-            color: isDarkMode ? ConfigColors.activeTimerColor : ConfigColors.textColor,
+            color: getDarkModeIconColor(isDarkMode),
             size: height(context) * 0.04,
           ),
         ),
       );
-
-  List<Widget> settingsButton(BuildContext context) => <Widget>[
-        Padding(
-            padding: EdgeInsets.only(right: width(context) * 0.04),
-            child: CustomButton(
-              bottomSheet: SettingsBottomSheet(
-                changeSound: _changeSound,
-                selectedSoundIndex: selectedSoundIndex,
-                isDarkMode: isDarkMode,
-              ),
-              icon: Icons.settings,
-            ))
-      ];
 
   Column _timerSection(BuildContext context) => Column(
         children: [
@@ -203,59 +198,32 @@ class _MyHomePageState extends State<MyHomePage> {
             margin: EdgeInsets.only(bottom: height(context) * 0.02),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(15)),
-              color: isDarkMode ? ConfigColors.timerBackground : LightModeColors.timerBackgroundLight,
+              color: getTimerBck(isDarkMode),
             ),
             width: width(context) * 0.9,
             padding: EdgeInsets.symmetric(vertical: height(context) * 0.02),
             child: Column(
               children: <Widget>[
                 Icon(
-                  _seconds < 1 ? Icons.timer_off : Icons.timer,
-                  color: _seconds < 1
-                      ? isDarkMode
-                          ? ConfigColors.disabledBtn
-                          : LightModeColors.disabledBtnLight
-                      : (audioIsPlaying ? ConfigColors.activeTimerColor : ConfigColors.textColor),
+                  seconds < 1 ? Icons.timer_off : Icons.timer,
+                  color: getTimerIconAndTxtColor(seconds, isDarkMode, audioIsPlaying),
                   size: width(context) * 0.11,
                   shadows: applyShadow(),
                 ),
                 const CustomSizedBox(boxHeight: 0.007),
                 Text(
-                  computeTime(_seconds),
+                  computeTime(seconds),
                   style: TextStyle(
                     fontSize: width(context) * 0.1,
-                    color: _seconds < 1
-                        ? isDarkMode
-                            ? ConfigColors.disabledBtn
-                            : LightModeColors.disabledBtnLight
-                        : (audioIsPlaying ? ConfigColors.activeTimerColor : ConfigColors.textColor),
+                    color: getTimerIconAndTxtColor(seconds, isDarkMode, audioIsPlaying),
                     fontWeight: FontWeight.normal,
                     shadows: applyShadow(),
                   ),
                 ),
                 const CustomSizedBox(boxHeight: 0.007),
-                _timerButtons(),
+                timerButtons(seconds, colorSubtractButton, subtractTime, isDarkMode, colorAddButton, addTime),
               ],
             ),
-          ),
-        ],
-      );
-
-  Row _timerButtons() => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          TimerButton(
-              seconds: _seconds,
-              onTapColor: colorSubtractButton,
-              icon: Icons.remove_circle,
-              func: _subtractTime,
-              isDarkmode: isDarkMode),
-          TimerButton(
-            seconds: _seconds,
-            onTapColor: colorAddButton,
-            icon: Icons.add_circle,
-            func: _addTime,
-            isDarkmode: isDarkMode,
           ),
         ],
       );
