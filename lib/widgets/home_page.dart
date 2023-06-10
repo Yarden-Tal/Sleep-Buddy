@@ -143,6 +143,8 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       });
 
+  void _toggleDarkMode() => setState(() => isDarkMode = !isDarkMode);
+
   /* BUILD */
 
   @override
@@ -180,16 +182,14 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
   Padding _darkModeButton(BuildContext context) => Padding(
-        padding: EdgeInsets.only(left: width(context) * 0.03),
-        child: IconButton(
-          onPressed: () => setState(() => isDarkMode = !isDarkMode),
+      padding: EdgeInsets.only(left: width(context) * 0.03),
+      child: IconButton(
           icon: Icon(
             isDarkMode ? Icons.sunny : Icons.nightlight,
             color: getDarkModeIconColor(isDarkMode),
             size: height(context) * 0.04,
           ),
-        ),
-      );
+          onPressed: () => _toggleDarkMode()));
 
   Column _timerSection(BuildContext context) => Column(
         children: [
