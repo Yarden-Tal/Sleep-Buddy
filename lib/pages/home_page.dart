@@ -63,11 +63,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /* FUNCTIONS */
 
+  /// Toggle play button icon between play & stop
   void _toggleBtn() async {
     await _toggleAudio();
     setState(() => _iconShowsStop = !_iconShowsStop);
   }
 
+  /// Switch to a different audio track
   Future<void> changeSound(int newSound) async {
     if (newSound >= 1 && newSound <= sounds.length) {
       String selectedSound = sounds[newSound - 1];
@@ -77,6 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  /// Start or pause/continue audio track
   Future _toggleAudio() async {
     if (audioIsPlaying) {
       await audioPlayer.pause();
@@ -92,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
       await audioPlayer.setPlayerMode(PlayerMode.lowLatency);
       // await audioPlayer.setVolume(0.7);
       await audioPlayer.resume();
-      Timer(const Duration(seconds: 3), () async {
+      Timer(const Duration(seconds: 2), () async {
         // await audioPlayer2.setReleaseMode(ReleaseMode.loop);
         // await audioPlayer2.setPlayerMode(PlayerMode.lowLatency);
         // await audioPlayer2.setVolume(0.5);
@@ -104,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
     audioIsPlaying = !audioIsPlaying;
   }
 
+  /// Start the timer
   void _startTimer() {
     if ((_timer != null && _timer!.isActive) || seconds < 1) return;
     const oneSec = Duration(seconds: 1);
@@ -120,8 +124,10 @@ class _MyHomePageState extends State<MyHomePage> {
             }));
   }
 
+  /// Stop the timer
   void _stopTimer() => _timer?.cancel();
 
+  /// Add one timer duration-step
   void addTime() => setState(() {
         Timer(const Duration(milliseconds: 100), () {
           setState(() => colorAddButton = false);
@@ -131,6 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() => colorAddButton = true);
       });
 
+  /// Subtract one timer duration-step
   void subtractTime() => setState(() {
         if (seconds >= _stepDuration.inSeconds) {
           Timer(const Duration(milliseconds: 100), () {
@@ -143,6 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       });
 
+  /// Toggle dark & light color themes
   void _toggleDarkMode() => setState(() => isDarkMode = !isDarkMode);
 
   /* BUILD */

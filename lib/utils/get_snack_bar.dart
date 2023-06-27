@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:white_noise/config/colors.dart';
 import 'package:white_noise/config/responsivity_tools.dart';
 
+/// Get snackbar when device volume is too low
 void getSnackBar(double volume, BuildContext context) {
   if (volume <= 0.1) {
     SnackBar snackBar = SnackBar(

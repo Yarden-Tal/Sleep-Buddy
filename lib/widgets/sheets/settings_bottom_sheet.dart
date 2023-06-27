@@ -34,6 +34,7 @@ class SettingsBottomSheetState extends State<SettingsBottomSheet> {
     selectedSound = widget.selectedSoundIndex;
   }
 
+  /// Change sound & selected-radio when another button is selected
   void _setSelectedRadio(int val) async => setState(() {
         selectedSound = val;
         widget.changeSound(val);
