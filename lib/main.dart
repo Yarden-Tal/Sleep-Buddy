@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:white_noise/config/fonts.dart';
-import 'package:white_noise/widgets/home_page.dart';
+import 'package:white_noise/pages/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
