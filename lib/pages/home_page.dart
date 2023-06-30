@@ -28,7 +28,6 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _iconShowsStop = false;
   bool audioIsPlaying = false;
   final audioPlayer = AudioPlayer(playerId: "sound");
-  // final audioPlayer2 = AudioPlayer(playerId: "sound2");
   final _stepDuration = const Duration(minutes: 30);
   int selectedSoundIndex = 1;
   int seconds = 0;
@@ -41,7 +40,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     audioPlayer.setSourceAsset(sounds[0]);
-    // audioPlayer2.setSourceAsset(sounds[0]);
     selectedSoundIndex = 1;
     VolumeController().listener((volume) => setState(() => _volumeListenerValue = volume));
     VolumeController().getVolume().then((volume) => _volumeListenerValue = volume);
@@ -51,7 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     audioPlayer.dispose();
-    // audioPlayer2.dispose();
     _iconShowsStop = false;
     audioIsPlaying = false;
     colorAddButton = false;
@@ -74,17 +71,17 @@ class _MyHomePageState extends State<MyHomePage> {
     if (newSound >= 1 && newSound <= sounds.length) {
       String selectedSound = sounds[newSound - 1];
       await audioPlayer.setSourceAsset(selectedSound);
-      // await audioPlayer2.setSourceAsset(selectedSound);
       setState(() => selectedSoundIndex = newSound);
     }
   }
 
   /// Start or pause/continue audio track
   Future _toggleAudio() async {
+    // Pause
     if (audioIsPlaying) {
       await audioPlayer.pause();
-      // await audioPlayer2.pause();
       _stopTimer();
+      // Play
     } else if (!audioIsPlaying) {
       VolumeController().listener((volume) => setState(() => _volumeListenerValue = volume));
       VolumeController().getVolume().then((volume) {
@@ -92,16 +89,8 @@ class _MyHomePageState extends State<MyHomePage> {
         getSnackBar(_volumeListenerValue, context);
       });
       await audioPlayer.setReleaseMode(ReleaseMode.loop);
-      await audioPlayer.setPlayerMode(PlayerMode.lowLatency);
-      // await audioPlayer.setVolume(0.7);
       await audioPlayer.resume();
-      Timer(const Duration(seconds: 2), () async {
-        // await audioPlayer2.setReleaseMode(ReleaseMode.loop);
-        // await audioPlayer2.setPlayerMode(PlayerMode.lowLatency);
-        // await audioPlayer2.setVolume(0.5);
-        // await audioPlayer.setVolume(0.5);
-        // await audioPlayer2.resume();
-      });
+      Timer(const Duration(seconds: 3), () async {});
       _startTimer();
     }
     audioIsPlaying = !audioIsPlaying;
