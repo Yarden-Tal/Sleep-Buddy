@@ -77,23 +77,27 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /// Start or pause/continue audio track
   Future _toggleAudio() async {
-    // Pause
-    if (audioIsPlaying) {
-      await audioPlayer.pause();
-      _stopTimer();
-      // Play
-    } else if (!audioIsPlaying) {
-      VolumeController().listener((volume) => setState(() => _volumeListenerValue = volume));
-      VolumeController().getVolume().then((volume) {
-        setState(() => _volumeListenerValue = volume);
-        getSnackBar(_volumeListenerValue, context);
-      });
-      await audioPlayer.setReleaseMode(ReleaseMode.loop);
-      await audioPlayer.resume();
-      Timer(const Duration(seconds: 3), () async {});
-      _startTimer();
-    }
+    audioIsPlaying ? await _pauseAudio() : await _playAudio();
     audioIsPlaying = !audioIsPlaying;
+  }
+
+  /// Pause the audio
+  Future<void> _pauseAudio() async {
+    await audioPlayer.pause();
+    _stopTimer();
+  }
+
+  /// Start/continue the audio
+  Future<void> _playAudio() async {
+    VolumeController().listener((volume) => setState(() => _volumeListenerValue = volume));
+    VolumeController().getVolume().then((volume) {
+      setState(() => _volumeListenerValue = volume);
+      getSnackBar(_volumeListenerValue, context);
+    });
+    await audioPlayer.setReleaseMode(ReleaseMode.loop);
+    await audioPlayer.seek(const Duration(milliseconds: 700));
+    await audioPlayer.resume();
+    _startTimer();
   }
 
   /// Start the timer
