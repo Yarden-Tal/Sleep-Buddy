@@ -6,6 +6,11 @@ This app features:
 - A timer for stopping the selected sound
 - Dark & Light mode
 
+**Works on**
+- iOS
+- Android
+- MacOS
+
 Libraries:
   - Cupertino Icons
   - Audioplayers
